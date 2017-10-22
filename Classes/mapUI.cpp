@@ -2,6 +2,8 @@
 #include "Hero.h"
 #include "JoyStick.h"
 #include "Common.h"
+#include "monster.h"
+#include "MonsterManager.h"
 bool MapUI::init(String name)
 {
 	if (!Layer::init())
@@ -11,7 +13,10 @@ bool MapUI::init(String name)
 	tmx = CCTMXTiledMap::create(name.getCString());
 	this->addChild(tmx, 1, 10);
 	Hero * hero = Hero::create();
-	initHero(hero);
+	MonsterManager *monsterManager=MonsterManager::getMonsterManager();
+	monsterManager->setMap(tmx);
+	monsterManager->addMonster();
+	initHero(hero,"hero");
 	setTouchEnabled(true);
 	initScreen();
 	return true;
@@ -29,11 +34,13 @@ MapUI* MapUI::create(String name)
 	return mapUI;
 }
 
-void MapUI::initHero(Sprite * hero)
+void MapUI::initHero(Sprite * hero,char * name)
 {
 	//¶ÁÈ¡TMXÎÄ¼þ
+
+
 	TMXObjectGroup * objectGroup;
-	objectGroup = tmx->objectGroupNamed("hero");
+	objectGroup = tmx->objectGroupNamed(name);
 	
 	if (objectGroup!=NULL)
 	{
@@ -45,15 +52,20 @@ void MapUI::initHero(Sprite * hero)
 			float x = objInfo.at("x").asFloat();
 			float y = objInfo.at("y").asFloat();
 			hero->setPosition(ccp(x, y));
-			tmx->addChild(hero,127,"hero");
+			CCLOG("x:%f y: %f\n", x, y);
+			tmx->addChild(hero,127,name);
 		}
 	}
 }
+
+
 
 void MapUI::initJoyStick()
 {
 
 }
+
+
 
 void MapUI::initScreen()
 {

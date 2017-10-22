@@ -94,7 +94,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-	auto sceneMgr = new SceneMgr;
+	auto sceneMgr = SceneMgr::getSceneMgr();
 
 	auto scene = sceneMgr->createScene();
 

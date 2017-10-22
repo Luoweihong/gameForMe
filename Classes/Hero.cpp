@@ -1,8 +1,9 @@
 #include "Hero.h"
 #include "Common.h"
-
+#include "SceneMgr.h"
 bool Hero::init()
 {
+
 	if (!Sprite::init())
 	{
 		return true;
@@ -16,7 +17,7 @@ bool Hero::init()
 	}
 	initWithFile("walk1.png");
 	run();
-	speed = 100;
+	speed = 300;
 	
 	_speedUp = 0;
 	_speedAcc = 10;
@@ -40,7 +41,13 @@ Hero * Hero::create()
 bool Hero::canMoveDown(float dt)
 {
 	//拿到MAP 对象 遍历所有的格子
+
+	
 	CCTMXTiledMap * map = getMap();
+	if (map==NULL)
+	{
+		return false;
+	}
 	CCRect rcMario = boundingBox();
 	//拿到层
 	
@@ -54,10 +61,14 @@ bool Hero::canMoveDown(float dt)
 	for (int i = 0; i < 3;i++)
 	{
 		CCPoint ptTile = Common::Point2Tile(map, pt[i]);
-		static const char* layerName[1] = { "land" };
-		for (int j = 0; j < 1; ++j)
+		static const char* layerName[2] = { "land","land2" };
+		for (int j = 0; j < sizeof(layerName)/4; ++j)
 		{
 			CCTMXLayer* layer = map->layerNamed(layerName[j]);
+			if (layer==NULL)
+			{
+				continue;
+			}
 			int gid = layer->tileGIDAt(ptTile);
 			if (gid != 0)
 			{
@@ -139,7 +150,34 @@ void Hero::update(float dt)
 	case 4:
 		moveRight(dt);
 		break;
+	case 1:
+	{
+			  CCTMXTiledMap * map = getMap();
+			  Rect hero = boundingBox();
+
+			  Vec2 ptToNext = Vec2(hero.getMidX(), hero.getMidY());
+			  CCTMXLayer * layer = map->layerNamed("tp");
+			  Vect ptTile = Common::Point2Tile2(map, ptToNext);
+			  if (layer==NULL)
+			  {
+				  return;
+			  }
+
+			  int gid = layer->tileGIDAt(ptTile);
+			  if (gid != 0)
+			  {
+				  CCLOG("传送11111");
+				  unscheduleUpdate();
+				  SceneMgr * sceneMgr = SceneMgr::getSceneMgr();
+				  sceneMgr->changeScene("./map/map2.tmx");
+
+			  }
+	}
+		break;
 	default:
+		
+
+
 		break;
 	}
 	moveUp(dt);
@@ -215,13 +253,13 @@ bool Hero::canMoveUp(float dt)
 		//点转换成格子坐标
 		for (int i = 0; i < 1;i++)
 		{
-			Vec2  ptTile = Common::Point2Tile(map,pt[i]);
+			Vec2  ptTile = Common::Point2Tile2(map,pt[i]);
 			int gid=layer->getTileGIDAt(ptTile);
 
 			if (gid!=0)
 			{
 				CCPoint ptLB = Common::Tile2PointLB(map, ptTile);
-				this->setPositionY(ptLB.y);
+				
 				_speedUp = 0;
 				return false;
 
@@ -243,9 +281,8 @@ void Hero::moveRight(float dt)
 	Vec2 ptInMap = getMap()->convertToNodeSpace(this->getPosition());
 	if (ponitInWorld.x>winSize.width/2)
 	{
-		CCLOG("%f", ptInMap.x);
-		CCLOG("%f", ponitInWorld.x);
-		CCLOG("contentsize%f", getMap()->getContentSize().width);
+	
+		
 		if (ptInMap.x>getMap()->getContentSize().width)
 		{
 			return;
@@ -290,4 +327,5 @@ void Hero::moveLeft(float dt)
 
 
 }
+
 

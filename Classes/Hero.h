@@ -37,4 +37,6 @@ public:
 	CC_SYNTHESIZE(int, _speedDown, SpeedDown);
 	CC_SYNTHESIZE(int, _speedAcc, SpeedAcc);
 
+
+
 };

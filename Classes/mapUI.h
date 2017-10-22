@@ -11,9 +11,8 @@ public:
 	bool init(String name);
 	CCTMXTiledMap* tmx;
 	static MapUI* create(String name);
-	void initHero(Sprite *);
+	void initHero(Sprite *,char *);
 	void initJoyStick();
-
 	void initScreen();
 
 };
