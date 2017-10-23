@@ -17,12 +17,14 @@ bool Hero::init()
 	}
 	initWithFile("walk1.png");
 	run();
-	speed = 300;
+	speed = 200;
 	
 	_speedUp = 0;
 	_speedAcc = 10;
 	_speedDown = _speedAcc;
-	setAnchorPoint(Vec2(0.5,0));
+	setAnchorPoint(Vec2(0,0));
+	stateMachine = new StateMachine;
+	stateMachine->init();
 	scheduleUpdate();
 	return true;
 }
@@ -133,11 +135,18 @@ void Hero::update(float dt)
 	short key;
 
 	key = GetKeyState('D');
-	if (key < 0) moveRight(dt);
+
+	if (key < 0) {
+		stateMachine->ChangeState(StateMachine::FACE::RIGHT);
+		moveRight(dt);
+
+	}
 
 	key = GetKeyState('A');
-	if (key < 0) moveLeft(dt);
-
+	if (key < 0) {
+		stateMachine->ChangeState(StateMachine::FACE::LEFT);
+		moveLeft(dt);
+	}
 #endif
 	
 
@@ -145,9 +154,12 @@ void Hero::update(float dt)
 	{
 		//ÏòÓÒ×ß
 	case 3:
+		
+		stateMachine->ChangeState(StateMachine::FACE::LEFT);
 		moveLeft(dt);
 		break;
 	case 4:
+		stateMachine->ChangeState(StateMachine::FACE::RIGHT);
 		moveRight(dt);
 		break;
 	case 1:
@@ -183,6 +195,8 @@ void Hero::update(float dt)
 	moveUp(dt);
 	moveDown(dt);
 }
+
+
 
 void Hero::updataStatus()
 {
@@ -273,6 +287,12 @@ bool Hero::canMoveUp(float dt)
 
 void Hero::moveRight(float dt)
 {
+	CCFlipX *action = CCFlipX::create(false);
+	runAction(action);
+	if (stateMachine->getState()==StateMachine::FACE::RIGHT)
+	{
+		setScaleX(1);
+	}
 	if (!canMoveRight(dt))
 		return;
 
@@ -299,6 +319,8 @@ void Hero::moveRight(float dt)
 
 void Hero::moveLeft(float dt)
 {
+	CCFlipX *action = CCFlipX::create(true);
+	runAction(action);
 	if (!canMoveLeft(dt))
 	{
 		return ;

@@ -1,6 +1,7 @@
 #pragma once
 #include "cocos2d.h"
 #include "JoyStick.h"
+#include "stateMachine.h"
 USING_NS_CC;
 
 
@@ -36,6 +37,7 @@ public:
 	CC_SYNTHESIZE(int, _speedUp, SpeedUp);
 	CC_SYNTHESIZE(int, _speedDown, SpeedDown);
 	CC_SYNTHESIZE(int, _speedAcc, SpeedAcc);
+	StateMachine * stateMachine;
 
 
 
