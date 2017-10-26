@@ -108,6 +108,33 @@ struct Common
 		return animate;
 
 	}
+
+
+	static Animate * createAnimate(String  filename, String name,int count)
+	{
+		Vector<SpriteFrame*> spriteFrameVec;
+		auto spriteFrameCache = SpriteFrameCache::getInstance();
+		spriteFrameCache->addSpriteFramesWithFile(filename.getCString());
+
+
+		char path[256] = { 0 };
+		for (int i = 1; i <= count; ++i)
+		{
+			sprintf(path, "%s (%d).png", name.getCString(),i);
+			log("path = %s", path);
+			SpriteFrame *pSpriteFrame = spriteFrameCache->getSpriteFrameByName(path);
+			spriteFrameVec.pushBack(pSpriteFrame);
+		}
+		// 0.1那个参数必须设定，可以设定除默认值意外的任何值，如果你不设定，根本就无法播放Animate动作  
+		// Cocos2d-x的坑还不少啊，各位需谨慎啊  
+		auto animation = Animation::createWithSpriteFrames(spriteFrameVec, 0.1);
+		animation->setDelayPerUnit(2.8f / 14.0f);//必须设置否则不会动态播放  
+		animation->setRestoreOriginalFrame(true);//是否回到第一帧  
+		animation->setLoops(-1);//重复次数 （-1:无限循环）  
+		Animate *animate = Animate::create(animation);
+		return animate;
+
+	}
 };
 
 #endif

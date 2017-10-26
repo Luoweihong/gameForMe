@@ -9,13 +9,17 @@ bool Monster::init(String name)
 	}
 	setmonsterName(name);
 	initMember((char *)getmonsterName().getCString());
+	setWalkDistance(this->getPositionX());
+	setSpeed(50);
+	scheduleUpdate();
+	
 	return true;
 }
 
 Monster * Monster::create(String name)
 {
 	Monster * monster = new Monster;
-	
+
 	if (!monster->init(name))
 	{
 		return NULL;
@@ -24,20 +28,26 @@ Monster * Monster::create(String name)
 	return monster;
 }
 
-void Monster::runAnimate(char * filename,int count)
+void Monster::update(float dt)
 {
-	Animate * animate =Common::createAnimate(filename, count);
+	
 
-	this->runAction(animate);
+	if (state!=WALK)
+	{
+		state = WALK;
+		stopAllActions();
+		Animate *animate = Common::createAnimate("./monster/yuduwalk.plist", "yuduwalk", 8);
+		setFlippedX(-1);
+		runAction(animate);
+	}
+	if (this->getWalkDistance()-this->getPositionX()>300)
+	{
+		
+		return;
+	}
+	setPositionX(this->getPositionX()-dt*getSpeed());
+
 
 }
 
-void Monster::initMember(char * name)
-{
-	DataManager* dataManager= DataManager::getDataManager();
-	ValueMap vm = dataManager->readDataFromJson("Role.json",name);
-	setmonsterName(vm[name].asString());
-	setHp(vm["Hp"].asInt());
-	setAttack(vm["Attack"].asInt());
-}
 
