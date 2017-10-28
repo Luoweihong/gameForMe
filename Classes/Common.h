@@ -94,7 +94,7 @@ struct Common
 		for (int i = 1; i <= count; ++i)
 		{
 			sprintf(path, "yudu%d.png", i);
-			log("path = %s", path);
+		//	log("path = %s", path);
 			SpriteFrame *pSpriteFrame = spriteFrameCache->getSpriteFrameByName(path);
 			spriteFrameVec.pushBack(pSpriteFrame);
 		}
@@ -121,7 +121,7 @@ struct Common
 		for (int i = 1; i <= count; ++i)
 		{
 			sprintf(path, "%s (%d).png", name.getCString(),i);
-			log("path = %s", path);
+			//log("path = %s", path);
 			SpriteFrame *pSpriteFrame = spriteFrameCache->getSpriteFrameByName(path);
 			spriteFrameVec.pushBack(pSpriteFrame);
 		}

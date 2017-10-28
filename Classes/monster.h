@@ -10,5 +10,9 @@ public:
 	bool init(String name);
 	static Monster * create(String name);
 	void update(float dt);
+	void changeState(float dt);
+	Animate *animatewalk;
+	Animate *animateNormal;
+
 
 };

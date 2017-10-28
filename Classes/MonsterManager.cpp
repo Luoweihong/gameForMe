@@ -18,9 +18,9 @@ void MonsterManager::addMonster()
 			String name = objInfo.at("type").asString();
 			Monster *monster=Monster::create("monster");
 			monster->initWithFile("./monster/yudu1.png");
-			monster->runAnimate("./monster/yudu.plist", 14);
 			monsters.pushBack(monster);
 			monster->setPosition(ccp(x, y));
+			monster->setWalkDistance(monster->getPositionX());
 			monster->setAnchorPoint(Vec2(0, 0));
 			map->addChild(monster, 127);
 		}

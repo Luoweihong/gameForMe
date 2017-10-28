@@ -9,6 +9,7 @@ MonsterBase * MonsterBase::create(String name)
 		return NULL;
 	}
 	monster->autorelease();
+	
 	return monster;
 }
 

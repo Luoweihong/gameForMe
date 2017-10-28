@@ -9,9 +9,13 @@ bool Monster::init(String name)
 	}
 	setmonsterName(name);
 	initMember((char *)getmonsterName().getCString());
-	setWalkDistance(this->getPositionX());
-	setSpeed(50);
+	setSpeed(100);
 	scheduleUpdate();
+	animateNormal = nullptr;
+	animatewalk = nullptr;
+	state = NORMAL;
+	face = LEFT;
+	
 	
 	return true;
 }
@@ -30,24 +34,79 @@ Monster * Monster::create(String name)
 
 void Monster::update(float dt)
 {
-	
+	if (state==MonsterBase::STATE::WALK)
+	{
+		if (animatewalk == nullptr)
+		{
+			Animate *animatewalk = Common::createAnimate("./monster/yuduwalk.plist", "yuduwalk", 8);
+			this->animatewalk = animatewalk;
+			runAction(animatewalk);
 
-	if (state!=WALK)
-	{
-		state = WALK;
-		stopAllActions();
-		Animate *animate = Common::createAnimate("./monster/yuduwalk.plist", "yuduwalk", 8);
-		setFlippedX(-1);
-		runAction(animate);
-	}
-	if (this->getWalkDistance()-this->getPositionX()>300)
-	{
+		}
 		
-		return;
+		if (face == FACE::LEFT)
+		{
+			CCLOG("faceLEft%d",face);
+			setFlippedX(true);
+			if (this->getWalkDistance() - this->getPositionX() > 300)
+			{
+				
+				face = FACE::RIGHT;
+				changeState(dt);
+				return;
+			}
+			setPositionX(this->getPositionX() - dt*getSpeed());
+		}
+		else
+		{
+			CCLOG("faceRight%d", face);
+			setFlippedX(false);
+			if (this->getPositionX()-this->getWalkDistance() > 200)
+			{
+
+				face = FACE::LEFT;
+				changeState(dt);
+				return;
+			}
+			setPositionX(this->getPositionX() + dt*getSpeed());
+
+		}
 	}
-	setPositionX(this->getPositionX()-dt*getSpeed());
+	else if (state == MonsterBase::STATE::NORMAL)
+	{
+		if (animateNormal == nullptr)
+		{
+			CCLOG("noraml");
+			Animate *animateNormal = Common::createAnimate("./monster/yudu.plist", 14);
+			this->animateNormal = animateNormal;
+			runAction(animateNormal);
+			scheduleOnce(schedule_selector(Monster::changeState, this), 2);
+		}
+		
 
-
+	}
 }
 
+
+
+void Monster::changeState(float dt)
+{
+	
+	if (this->state ==NORMAL )
+	{
+		CCLOG("change state");
+		stopAllActions();
+		this->state = WALK;
+		animateNormal = nullptr;
+		CCLOG("%p", animateNormal);
+
+	}
+	else
+	{
+		stopAllActions();
+		this->state = NORMAL;
+		animatewalk = nullptr;
+		
+	}
+}
 

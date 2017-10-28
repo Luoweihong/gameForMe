@@ -1,16 +1,25 @@
 #include "cocos2d.h"
 #include "Common.h"
+#include "stateMachine.h"
 USING_NS_CC;
 class MonsterBase :public Sprite
 {
 public:
-	typedef enum state
+	typedef enum 
 	{
 		NORMAL = 0,
 		ATTACK,
 		DEAD,
-		WALK
+		WALK,
+		NONE
 	}STATE;
+
+	typedef enum 
+	{
+		LEFT = 0,
+		RIGHT
+	}FACE;
+	FACE face;
 	STATE state;
 	virtual bool init(String name);
 
