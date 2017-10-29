@@ -11,8 +11,8 @@ public:
 	static Monster * create(String name);
 	void update(float dt);
 	void changeState(float dt);
-	Animate *animatewalk;
-	Animate *animateNormal;
+	RepeatForever * animatewalk;
+	RepeatForever * animateNormal;
 
 
 };

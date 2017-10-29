@@ -10,20 +10,27 @@ bool Hero::init()
 	}
 	
 	
-	for (int i = 1; i < 8;i++)
+	/*for (int i = 1; i < 8; i++)
 	{
-		SpriteFrame * sprf = SpriteFrame::create(String::createWithFormat("walk%d.png", i)->getCString(), CCRectMake(0, 0, 84, 63));
-		SpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(sprf, String::createWithFormat("walk%d.png", i)->getCString());
-	}
-	initWithFile("walk1.png");
-	run();
-	speed = 200;
+	SpriteFrame * sprf = SpriteFrame::create(String::createWithFormat("walk%d.png", i)->getCString(), CCRectMake(0, 0, 84, 63));
+	SpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(sprf, String::createWithFormat("walk%d.png", i)->getCString());
+	}*/
+	initWithFile("./Hero/dengmao (1).png");
+	//创建动画
+	_stay = Common::createAnimate("./Hero/dengmao", "dengmao", 4);
+	_walk = Common::createAnimate("./Hero/dengmaowalk", "dengmaowalk", 8);
+	 Common::createAnimate("./Hero/dengmaohit", "hit", 11,1);
 	
+
+	runAction(_stay);
+	speed = 100;
 	_speedUp = 0;
 	_speedAcc = 10;
 	_speedDown = _speedAcc;
 	setAnchorPoint(Vec2(0,0));
 	stateMachine = new StateMachine;
+	
+	state = STATE::STAY;
 	stateMachine->init();
 	scheduleUpdate();
 	return true;
@@ -125,7 +132,6 @@ void Hero::run()
 	animation->setLoops(-1);
 	CCAnimate* animate = CCAnimate::create(animation);
 	runAction(animate);
-	
 }
 
 void Hero::update(float dt)
@@ -135,31 +141,33 @@ void Hero::update(float dt)
 	short key;
 
 	key = GetKeyState('D');
-
 	if (key < 0) {
-		stateMachine->ChangeState(StateMachine::FACE::RIGHT);
-		moveRight(dt);
+		dir = 4;
+	
 
 	}
 
 	key = GetKeyState('A');
 	if (key < 0) {
-		stateMachine->ChangeState(StateMachine::FACE::LEFT);
-		moveLeft(dt);
+		dir = 3;
+	
 	}
 #endif
 	
-
+	if (state == STATE::ATTACK)
+	{
+		return;
+	}
+	
 	switch (dir)
 	{
 		//向右走
 	case 3:
-		
-		stateMachine->ChangeState(StateMachine::FACE::LEFT);
+		CCLOG("%d", state);
 		moveLeft(dt);
 		break;
 	case 4:
-		stateMachine->ChangeState(StateMachine::FACE::RIGHT);
+		
 		moveRight(dt);
 		break;
 	case 1:
@@ -186,6 +194,16 @@ void Hero::update(float dt)
 			  }
 	}
 		break;
+	case 0:
+		if (state != STATE::STAY)
+		{
+			state = STAY;
+			CCLOG("updataStatus(0);");
+			stopAllActions();
+			updataStatus(0);
+		}
+		break;
+
 	default:
 		
 
@@ -198,8 +216,24 @@ void Hero::update(float dt)
 
 
 
-void Hero::updataStatus()
+void Hero::updataStatus(int state)
 {
+	switch (state)
+	{
+	case 3:
+		CCLOG("dengmaowalk");
+		runAction(CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmaowalk"))));
+		break;
+
+	case 0:
+		runAction(CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmao"))));
+	break;
+
+
+	default:
+		break;
+	}
+
 
 }
 
@@ -287,6 +321,13 @@ bool Hero::canMoveUp(float dt)
 
 void Hero::moveRight(float dt)
 {
+	if (state != STATE::WALK)
+	{
+		CCLOG("dengmaowalk");
+		state = STATE::WALK;
+		stopAllActions();
+		updataStatus(3);
+	}
 	CCFlipX *action = CCFlipX::create(false);
 	runAction(action);
 	if (stateMachine->getState()==StateMachine::FACE::RIGHT)
@@ -301,24 +342,26 @@ void Hero::moveRight(float dt)
 	Vec2 ptInMap = getMap()->convertToNodeSpace(this->getPosition());
 	if (ponitInWorld.x>winSize.width/2)
 	{
-	
-		
 		if (ptInMap.x>getMap()->getContentSize().width)
 		{
 			return;
 		}
-
 		Common::moveNode(getMap(), Vec2(-dt*speed, 0));
-		
-		
-
-
 	}
 
 }
 
 void Hero::moveLeft(float dt)
 {
+
+	if (state != STATE::WALK)
+	{
+		CCLOG("dengmaowalk");
+		state = STATE::WALK;
+		stopAllActions();
+		updataStatus(3);
+	}
+
 	CCFlipX *action = CCFlipX::create(true);
 	runAction(action);
 	if (!canMoveLeft(dt))
@@ -345,9 +388,36 @@ void Hero::moveLeft(float dt)
 			Common::moveNode(getMap(), Vec2(dt*speed, 0));
 		}
 	}
+}
 
 
 
+
+void Hero::skillRelease(int skill_id)
+{
+	
+	stopAllActions();
+	switch (skill_id)
+	{
+	case 1:
+	{
+			  state = ATTACK;
+			  CCCallFunc *callfun = CCCallFunc::create([&](){
+				  CCLOG("state == NONE");
+				  state = STATE::NONE;
+				  CCLOG("state == NONE %d",state);
+			  });
+			  auto delay = DelayTime::create(0.2f);
+			  _hit =Animate::create(AnimationCache::getInstance()->getAnimation("hit"));
+			  CCSequence * sequence = CCSequence::create(_hit,delay,callfun , nullptr);
+			  runAction(sequence);
+	}
+		break;
+	default:
+		break;
+	}
+
+	
 }
 
 

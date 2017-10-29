@@ -12,32 +12,19 @@ bool JoyStick::init()
 	}
 	
 	/*1. 创建摇杆的背景*/
-	 rocker_bg = Sprite::create("joystickBg.png");
+	rocker_bg = Sprite::create("joystickBg.png");
 	rocker_bg->setPosition(Vec2(150, 150));
 	addChild(rocker_bg);
 	rocker_bg->setScale(0.5);
 	
 	/*2. 创建摇杆*/
-	 rocker = Sprite::create("joystick.png");
+	rocker = Sprite::create("joystick.png");
 	rocker->setPosition(Vec2(150, 150));
 	addChild(rocker);
 	rocker->setScale(0.5);
+	addCtrl();
 
 
-	
-	
-	
-	
-
-	CCMenuItemImage * jump = CCMenuItemImage::create("joystick.png", "joystick.png", this, menu_selector(JoyStick::jump));
-	Menu * menu = Menu::create();
-	menu->addChild(jump);
-	menu->setPosition(800, 200);
-
-
-	menu->alignItemsVertically();
-	jump->setScale(0.5);
-	addChild(menu);
 	return true;
 }
 
@@ -172,7 +159,46 @@ void JoyStick::jump(CCObject *)
 	
 	Hero * hero = (Hero *)tmx->getChildByName("hero");
 	hero->setSpeedUp(300);
-	hero->updataStatus();
+	hero->updataStatus(1);
 
 
+}
+
+void JoyStick::addCtrl()
+{
+	CCMenuItemImage * jump = CCMenuItemImage::create("joystick.png", "joystick.png", this, menu_selector(JoyStick::jump));
+	Menu * menu = Menu::create();
+	menu->addChild(jump);
+	menu->setPosition(800, 200);
+
+
+	menu->alignItemsHorizontally();
+	jump->setScale(0.5);
+	
+
+
+	CCMenuItemImage * hit = CCMenuItemImage::create("./skill/hit (1).png", "./skill/hit (1).png", this, menu_selector(JoyStick::skillRelease));
+	hit->setPosition(jump->getPosition() - ccp(50, 50));
+	hit->setTag(1);
+	menu->addChild(hit);
+	addChild(menu);
+}
+
+void JoyStick::skillRelease(CCObject * sender)
+{
+	//判断点击的是哪个技能
+	CCMenuItemImage * skill = (CCMenuItemImage *)sender;
+	int id =skill->getTag();
+
+	setHero();
+	hero->skillRelease(id);
+
+	CCLOG("%d", id);
+}
+
+Hero * JoyStick::setHero()
+{
+	MapUI * map = (MapUI *)getParent();
+	hero = map->getHero();
+	return hero;
 }

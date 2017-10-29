@@ -12,7 +12,7 @@ bool MapUI::init(String name)
 	}
 	tmx = CCTMXTiledMap::create(name.getCString());
 	this->addChild(tmx, 1, 10);
-	Hero * hero = Hero::create();
+	 hero = Hero::create();
 	MonsterManager *monsterManager=MonsterManager::getMonsterManager();
 	monsterManager->setMap(tmx);
 	monsterManager->addMonster();

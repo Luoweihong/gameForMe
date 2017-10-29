@@ -101,22 +101,26 @@ struct Common
 		// 0.1那个参数必须设定，可以设定除默认值意外的任何值，如果你不设定，根本就无法播放Animate动作  
 		// Cocos2d-x的坑还不少啊，各位需谨慎啊  
 		auto animation = Animation::createWithSpriteFrames(spriteFrameVec, 0.1);
+		
 		animation->setDelayPerUnit(2.8f / 14.0f);//必须设置否则不会动态播放  
 		animation->setRestoreOriginalFrame(true);//是否回到第一帧  
 		animation->setLoops(-1);//重复次数 （-1:无限循环）  
+		CCAnimationCache::sharedAnimationCache()->addAnimation(animation,"yudu");
 		Animate *animate = Animate::create(animation);
 		return animate;
 
 	}
 
 
-	static Animate * createAnimate(String  filename, String name,int count)
+	static Animate * createAnimate(String  filename, String name,int count,int loops=-1)
 	{
 		Vector<SpriteFrame*> spriteFrameVec;
 		auto spriteFrameCache = SpriteFrameCache::getInstance();
-		spriteFrameCache->addSpriteFramesWithFile(filename.getCString());
+		
+		char anim[100];
 
-
+		sprintf(anim,"%s%s",filename.getCString(),".plist");
+		spriteFrameCache->addSpriteFramesWithFile(anim);
 		char path[256] = { 0 };
 		for (int i = 1; i <= count; ++i)
 		{
@@ -130,7 +134,9 @@ struct Common
 		auto animation = Animation::createWithSpriteFrames(spriteFrameVec, 0.1);
 		animation->setDelayPerUnit(2.8f / 14.0f);//必须设置否则不会动态播放  
 		animation->setRestoreOriginalFrame(true);//是否回到第一帧  
-		animation->setLoops(-1);//重复次数 （-1:无限循环）  
+		animation->setLoops(loops);//重复次数 （-1:无限循环）
+		CCAnimationCache::sharedAnimationCache()->addAnimation(animation, name.getCString());
+
 		Animate *animate = Animate::create(animation);
 		return animate;
 

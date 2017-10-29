@@ -25,7 +25,8 @@ public:
 	static  direction  dir;
 	virtual bool init() override;
 	void JoyStick::checkDirection(float angle);
-	
+	void addCtrl();
+
 	CREATE_FUNC(JoyStick);
 	virtual void onEnter() override;
 	virtual void onExit() override;
@@ -33,7 +34,9 @@ public:
 	virtual void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *unused_event) override;
 	virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event) override;
 	Hero* hero;
+	Hero * setHero();
 	void jump(CCObject *);
+	void skillRelease(CCObject *);
 private:
 
 	cocos2d::EventListenerTouchOneByOne* listener;  /*定义为成员变量，方便移除监听*/

@@ -15,10 +15,19 @@ public:
 		
 	}FACE;
 	
+	typedef enum 
+	{
+		STAY=0,
+		FIGHT,
+		WALK,
+		NONE,
+		ATTACK
+	}STATE;
+	STATE state;
 	bool init();
 	void run();
 	void update(float dt);
-	void updataStatus();
+	void updataStatus(int state);
 	void move(float dt);
 	bool canMoveUp(float dt);
 	void moveUp(float dt);
@@ -28,6 +37,9 @@ public:
 	bool canMoveRight(float);
 	void moveRight(float);
 	void moveLeft(float);
+
+	void skillRelease(int skill_id);
+
 	CCTMXTiledMap * getMap()
 	{
 		return (CCTMXTiledMap*)getParent();
@@ -38,7 +50,7 @@ public:
 	CC_SYNTHESIZE(int, _speedDown, SpeedDown);
 	CC_SYNTHESIZE(int, _speedAcc, SpeedAcc);
 	StateMachine * stateMachine;
-
-
-
+	Animate * _stay;
+	Animate * _walk;
+	Animate * _hit;
 };

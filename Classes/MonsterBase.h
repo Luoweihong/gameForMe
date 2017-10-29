@@ -11,7 +11,8 @@ public:
 		ATTACK,
 		DEAD,
 		WALK,
-		NONE
+		NONE,
+		BEATTACK
 	}STATE;
 
 	typedef enum 

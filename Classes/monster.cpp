@@ -15,8 +15,8 @@ bool Monster::init(String name)
 	animatewalk = nullptr;
 	state = NORMAL;
 	face = LEFT;
-	
-	
+	Common::createAnimate("./monster/yudu.plist", 14);
+	Common::createAnimate("./monster/yuduwalk", "yuduwalk", 8);
 	return true;
 }
 
@@ -38,7 +38,7 @@ void Monster::update(float dt)
 	{
 		if (animatewalk == nullptr)
 		{
-			Animate *animatewalk = Common::createAnimate("./monster/yuduwalk.plist", "yuduwalk", 8);
+			RepeatForever  *animatewalk = CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("yuduwalk")));
 			this->animatewalk = animatewalk;
 			runAction(animatewalk);
 
@@ -46,7 +46,7 @@ void Monster::update(float dt)
 		
 		if (face == FACE::LEFT)
 		{
-			CCLOG("faceLEft%d",face);
+			
 			setFlippedX(true);
 			if (this->getWalkDistance() - this->getPositionX() > 300)
 			{
@@ -59,7 +59,7 @@ void Monster::update(float dt)
 		}
 		else
 		{
-			CCLOG("faceRight%d", face);
+			
 			setFlippedX(false);
 			if (this->getPositionX()-this->getWalkDistance() > 200)
 			{
@@ -77,13 +77,12 @@ void Monster::update(float dt)
 		if (animateNormal == nullptr)
 		{
 			CCLOG("noraml");
-			Animate *animateNormal = Common::createAnimate("./monster/yudu.plist", 14);
+			RepeatForever *animateNormal =CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("yudu")));
+
 			this->animateNormal = animateNormal;
 			runAction(animateNormal);
 			scheduleOnce(schedule_selector(Monster::changeState, this), 2);
 		}
-		
-
 	}
 }
 
@@ -94,19 +93,16 @@ void Monster::changeState(float dt)
 	
 	if (this->state ==NORMAL )
 	{
-		CCLOG("change state");
+		
 		stopAllActions();
 		this->state = WALK;
 		animateNormal = nullptr;
-		CCLOG("%p", animateNormal);
-
 	}
 	else
 	{
 		stopAllActions();
 		this->state = NORMAL;
 		animatewalk = nullptr;
-		
 	}
 }
 
