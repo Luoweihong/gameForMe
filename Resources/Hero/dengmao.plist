@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>frames</key>
+        <dict>
+            <key>dengmao (1).png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{191,153}</string>
+                <key>spriteSourceSize</key>
+                <string>{191,153}</string>
+                <key>textureRect</key>
+                <string>{{0,0},{191,153}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>dengmao (2).png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{191,153}</string>
+                <key>spriteSourceSize</key>
+                <string>{191,153}</string>
+                <key>textureRect</key>
+                <string>{{191,0},{191,153}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>dengmao (3).png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{190,153}</string>
+                <key>spriteSourceSize</key>
+                <string>{190,153}</string>
+                <key>textureRect</key>
+                <string>{{382,0},{190,153}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>dengmao (4).png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{193,153}</string>
+                <key>spriteSourceSize</key>
+                <string>{193,153}</string>
+                <key>textureRect</key>
+                <string>{{572,0},{193,153}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+        </dict>
+        <key>metadata</key>
+        <dict>
+            <key>format</key>
+            <integer>3</integer>
+            <key>pixelFormat</key>
+            <string>RGBA8888</string>
+            <key>premultiplyAlpha</key>
+            <false/>
+            <key>realTextureFileName</key>
+            <string>dengmao.png</string>
+            <key>size</key>
+            <string>{765,153}</string>
+            <key>smartupdate</key>
+            <string>$TexturePacker:SmartUpdate:137cedf1769d0243980e5b6cfe15bb7d:568d89a65c4a1b0b783a606749dbc482:733cf30897b31cf2d259c42787bfc7ed$</string>
+            <key>textureFileName</key>
+            <string>dengmao.png</string>
+        </dict>
+    </dict>
+</plist>
