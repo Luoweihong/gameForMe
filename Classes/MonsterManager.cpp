@@ -18,7 +18,7 @@ void MonsterManager::addMonster()
 			String name = objInfo.at("type").asString();
 			Monster *monster=Monster::create("monster");
 			monster->initWithFile("./monster/yudu1.png");
-			monsters.pushBack(monster);
+			monsters.push_back(monster);
 			monster->setPosition(ccp(x, y));
 			monster->setWalkDistance(monster->getPositionX());
 			monster->setAnchorPoint(Vec2(0, 0));

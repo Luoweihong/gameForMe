@@ -132,15 +132,28 @@ struct Common
 		// 0.1那个参数必须设定，可以设定除默认值意外的任何值，如果你不设定，根本就无法播放Animate动作  
 		// Cocos2d-x的坑还不少啊，各位需谨慎啊  
 		auto animation = Animation::createWithSpriteFrames(spriteFrameVec, 0.1);
-		animation->setDelayPerUnit(2.8f / 14.0f);//必须设置否则不会动态播放  
+		animation->setDelayPerUnit(0.15f);//必须设置否则不会动态播放  
 		animation->setRestoreOriginalFrame(true);//是否回到第一帧  
 		animation->setLoops(loops);//重复次数 （-1:无限循环）
 		CCAnimationCache::sharedAnimationCache()->addAnimation(animation, name.getCString());
 
 		Animate *animate = Animate::create(animation);
 		return animate;
+	}
+
+	void HeapSort(Vector<Sprite> nodes, int size)
+	{
+		int i;
+		BuildHeap(nodes,size);
+	}
+
+	void BuildHeap(Vector<Sprite> nodes, int size)
+	{
 
 	}
+
+
+
 };
 
 #endif

@@ -17,11 +17,6 @@ ValueMap DataManager::readDataFromJson(char * filename,char * ObjectName)
 	{
 		log("get json data err!");
 	}
-
-	
-
-
-
 	for (unsigned int i = 0; i < doc.Size();i++)
 	{
 		rapidjson::Value &v = doc[i];

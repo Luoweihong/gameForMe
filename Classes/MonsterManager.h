@@ -1,4 +1,6 @@
+#pragma once
 #include "cocos2d.h"
+#include "MonsterBase.h"
 USING_NS_CC;
 class MonsterManager 
 {
@@ -10,7 +12,7 @@ public:
 		this->map = map;
 	}
 
-	Vector<Sprite *> monsters;
+	
 	void addMonster();
 	static MonsterManager * getMonsterManager()
 	{
@@ -21,6 +23,7 @@ public:
 		monsterManager = new MonsterManager;
 
 	}
+	std::vector<MonsterBase *> monsters;
 protected:
 private:
 	MonsterManager(){

@@ -1,6 +1,8 @@
 #include "Hero.h"
 #include "Common.h"
 #include "SceneMgr.h"
+#include "monster.h"
+#include "MonsterManager.h"
 bool Hero::init()
 {
 
@@ -8,8 +10,8 @@ bool Hero::init()
 	{
 		return true;
 	}
-	
-	
+
+
 	/*for (int i = 1; i < 8; i++)
 	{
 	SpriteFrame * sprf = SpriteFrame::create(String::createWithFormat("walk%d.png", i)->getCString(), CCRectMake(0, 0, 84, 63));
@@ -19,17 +21,17 @@ bool Hero::init()
 	//创建动画
 	_stay = Common::createAnimate("./Hero/dengmao", "dengmao", 4);
 	_walk = Common::createAnimate("./Hero/dengmaowalk", "dengmaowalk", 8);
-	 Common::createAnimate("./Hero/dengmaohit", "hit", 11,1);
-	
+	Common::createAnimate("./Hero/dengmaohit", "hit", 11, 1);
+
 
 	runAction(_stay);
-	speed = 100;
+	speed = 200;
 	_speedUp = 0;
 	_speedAcc = 10;
 	_speedDown = _speedAcc;
-	setAnchorPoint(Vec2(0,0));
+	setAnchorPoint(Vec2(0, 0));
 	stateMachine = new StateMachine;
-	
+
 	state = STATE::STAY;
 	stateMachine->init();
 	scheduleUpdate();
@@ -51,15 +53,15 @@ bool Hero::canMoveDown(float dt)
 {
 	//拿到MAP 对象 遍历所有的格子
 
-	
+
 	CCTMXTiledMap * map = getMap();
-	if (map==NULL)
+	if (map == NULL)
 	{
 		return false;
 	}
 	CCRect rcMario = boundingBox();
 	//拿到层
-	
+
 	CCPoint pt[3];
 	pt[0] = ccp(rcMario.getMidX(), rcMario.getMinY() - dt*_speedDown);
 	pt[1] = ccp(rcMario.getMinX(), rcMario.getMinY() - dt*_speedDown);
@@ -67,14 +69,14 @@ bool Hero::canMoveDown(float dt)
 
 	if (pt[0].y >= map->getContentSize().height)
 		return true;
-	for (int i = 0; i < 3;i++)
+	for (int i = 0; i < 3; i++)
 	{
 		CCPoint ptTile = Common::Point2Tile(map, pt[i]);
-		static const char* layerName[2] = { "land","land2" };
-		for (int j = 0; j < sizeof(layerName)/4; ++j)
+		static const char* layerName[2] = { "land", "land2" };
+		for (int j = 0; j < sizeof(layerName) / 4; ++j)
 		{
 			CCTMXLayer* layer = map->layerNamed(layerName[j]);
-			if (layer==NULL)
+			if (layer == NULL)
 			{
 				continue;
 			}
@@ -83,7 +85,7 @@ bool Hero::canMoveDown(float dt)
 			{
 				_speedDown = _speedAcc;
 				CCPoint ptLB = Common::Tile2PointLB(map, ptTile + ccp(0, -1));
-				this->setPositionY(ptLB.y-20);
+				this->setPositionY(ptLB.y - 20);
 				return false;
 			}
 		}
@@ -93,7 +95,7 @@ bool Hero::canMoveDown(float dt)
 
 void Hero::moveDown(float dt)
 {
-	if (_speedUp<=0)
+	if (_speedUp <= 0)
 	{
 		if (canMoveDown(dt))
 		{
@@ -111,7 +113,7 @@ void Hero::moveDown(float dt)
 void Hero::run()
 {
 	Vector<CCAnimationFrame*> array;
-	for (int i = 1; i <8 ; i++) {
+	for (int i = 1; i < 8; i++) {
 		char str[50];
 		sprintf(str, "walk%d.png", i);
 
@@ -127,7 +129,7 @@ void Hero::run()
 	//使用动画帧数组创建，单位帧间隔0.2秒
 
 	//使用动画帧数组创建，单位帧间隔0.2秒
-	CCAnimation* animation = CCAnimation::create(array, 1.0/60);
+	CCAnimation* animation = CCAnimation::create(array, 1.0 / 60);
 	animation->setRestoreOriginalFrame(true);
 	animation->setLoops(-1);
 	CCAnimate* animate = CCAnimate::create(animation);
@@ -143,22 +145,22 @@ void Hero::update(float dt)
 	key = GetKeyState('D');
 	if (key < 0) {
 		dir = 4;
-	
+
 
 	}
 
 	key = GetKeyState('A');
 	if (key < 0) {
 		dir = 3;
-	
+
 	}
 #endif
-	
+
 	if (state == STATE::ATTACK)
 	{
 		return;
 	}
-	
+
 	switch (dir)
 	{
 		//向右走
@@ -167,7 +169,7 @@ void Hero::update(float dt)
 		moveLeft(dt);
 		break;
 	case 4:
-		
+
 		moveRight(dt);
 		break;
 	case 1:
@@ -178,7 +180,7 @@ void Hero::update(float dt)
 			  Vec2 ptToNext = Vec2(hero.getMidX(), hero.getMidY());
 			  CCTMXLayer * layer = map->layerNamed("tp");
 			  Vect ptTile = Common::Point2Tile2(map, ptToNext);
-			  if (layer==NULL)
+			  if (layer == NULL)
 			  {
 				  return;
 			  }
@@ -205,7 +207,7 @@ void Hero::update(float dt)
 		break;
 
 	default:
-		
+
 
 
 		break;
@@ -227,7 +229,7 @@ void Hero::updataStatus(int state)
 
 	case 0:
 		runAction(CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmao"))));
-	break;
+		break;
 
 
 	default:
@@ -241,7 +243,7 @@ bool Hero::canMoveLeft(float dt)
 {
 	CCTMXTiledMap * map = getMap();
 	Vec2 ptInWorld = map->convertToWorldSpace(this->getPosition());
-	if (ptInWorld.x-this->getContentSize().width/2<0)
+	if (ptInWorld.x - this->getContentSize().width / 2 < 0)
 	{
 		return false;
 	}
@@ -253,7 +255,7 @@ bool Hero::canMoveRight(float)
 {
 	CCTMXTiledMap * map = getMap();
 	Vec2 ptInWorld = map->convertToWorldSpace(this->getPosition());
-	if (ptInWorld>winSize)
+	if (ptInWorld > winSize)
 	{
 		return false;
 	}
@@ -269,16 +271,16 @@ void Hero::move(float dt)
 
 void Hero::moveUp(float dt)
 {
-	if (_speedUp<=0)
+	if (_speedUp <= 0)
 	{
 		return;
-		
+
 	}
 	if (!canMoveUp(dt))
 	{
 		return;
 	}
-	Common::moveNode(this, ccp(0,_speedUp*dt)); 
+	Common::moveNode(this, ccp(0, _speedUp*dt));
 	_speedUp = _speedUp - _speedAcc;
 }
 
@@ -287,27 +289,27 @@ bool Hero::canMoveUp(float dt)
 	CCTMXTiledMap  * map = getMap();
 	Rect rcHero = getBoundingBox();
 
-	
+
 	Vec2 pt[3];
 
 
 	pt[0] = ccp(rcHero.getMaxX(), rcHero.getMaxY() - dt*_speedDown);
-	
+
 	char * layername = { "land" };
 
-	for (int i = 0; i < strlen(layername);i++)
+	for (int i = 0; i < strlen(layername); i++)
 	{
 		CCTMXLayer *layer = map->layerNamed("land");
 		//点转换成格子坐标
-		for (int i = 0; i < 1;i++)
+		for (int i = 0; i < 1; i++)
 		{
-			Vec2  ptTile = Common::Point2Tile2(map,pt[i]);
-			int gid=layer->getTileGIDAt(ptTile);
+			Vec2  ptTile = Common::Point2Tile2(map, pt[i]);
+			int gid = layer->getTileGIDAt(ptTile);
 
-			if (gid!=0)
+			if (gid != 0)
 			{
 				CCPoint ptLB = Common::Tile2PointLB(map, ptTile);
-				
+
 				_speedUp = 0;
 				return false;
 
@@ -330,7 +332,7 @@ void Hero::moveRight(float dt)
 	}
 	CCFlipX *action = CCFlipX::create(false);
 	runAction(action);
-	if (stateMachine->getState()==StateMachine::FACE::RIGHT)
+	if (stateMachine->getState() == StateMachine::FACE::RIGHT)
 	{
 		setScaleX(1);
 	}
@@ -340,9 +342,9 @@ void Hero::moveRight(float dt)
 	Common::moveNode(this, ccp(dt*speed, 0));
 	Vec2 ponitInWorld = getMap()->convertToWorldSpace(this->getPosition());
 	Vec2 ptInMap = getMap()->convertToNodeSpace(this->getPosition());
-	if (ponitInWorld.x>winSize.width/2)
+	if (ponitInWorld.x > winSize.width / 2)
 	{
-		if (ptInMap.x>getMap()->getContentSize().width)
+		if (ptInMap.x > getMap()->getContentSize().width)
 		{
 			return;
 		}
@@ -366,7 +368,7 @@ void Hero::moveLeft(float dt)
 	runAction(action);
 	if (!canMoveLeft(dt))
 	{
-		return ;
+		return;
 	}
 	Common::moveNode(this, Vec2(-dt*speed, 0));
 	CCTMXTiledMap * map = getMap();
@@ -374,10 +376,10 @@ void Hero::moveLeft(float dt)
 	Vec2 pointInWorld = map->convertToWorldSpace(this->getPosition());
 	Vec2 ptInMap = map->convertToNodeSpace(this->getPosition());
 	int x = this->getPositionX();
-	if (pointInWorld.x<winSize.width/2)
+	if (pointInWorld.x < winSize.width / 2)
 	{
-		
-		if (ptInMap.x<winSize.width/2)
+
+		if (ptInMap.x < winSize.width / 2)
 		{
 
 			return;
@@ -395,21 +397,45 @@ void Hero::moveLeft(float dt)
 
 void Hero::skillRelease(int skill_id)
 {
-	
+
 	stopAllActions();
 	switch (skill_id)
 	{
 	case 1:
 	{
 			  state = ATTACK;
+			  //寻找怪物
+
+			  if (MonsterManager::getMonsterManager()->monsters.size() == 0)
+			  {
+				  return;
+			  }
+			  Monster * monster;
+			  //距离排序
+			  //堆排之后 找到离得最近的怪物 让人物跟随过去
+
+
+
+
+			  for each (monster in  MonsterManager::getMonsterManager()->monsters)
+			  {
+				  Vec2 distance = monster->getPosition() - this->getPosition();
+
+				  if (fabs(distance.x) < 50 && fabs(distance.y) < 50)
+				  {
+					  monster->state = MonsterBase::ATTACK;
+				  }
+			  }
+
+
 			  CCCallFunc *callfun = CCCallFunc::create([&](){
 				  CCLOG("state == NONE");
 				  state = STATE::NONE;
-				  CCLOG("state == NONE %d",state);
+				  CCLOG("state == NONE %d", state);
 			  });
 			  auto delay = DelayTime::create(0.2f);
-			  _hit =Animate::create(AnimationCache::getInstance()->getAnimation("hit"));
-			  CCSequence * sequence = CCSequence::create(_hit,delay,callfun , nullptr);
+			  _hit = Animate::create(AnimationCache::getInstance()->getAnimation("hit"));
+			  CCSequence * sequence = CCSequence::create(_hit, delay, callfun, nullptr);
 			  runAction(sequence);
 	}
 		break;
@@ -417,7 +443,7 @@ void Hero::skillRelease(int skill_id)
 		break;
 	}
 
-	
+
 }
 
 

@@ -1,9 +1,10 @@
+#pragma once
+#include "MonsterBase.h"
 #include "cocos2d.h"
 #include "stateMachine.h"
 #include "Common.h"
-#include "MonsterBase.h"
 USING_NS_CC;
-
+class MonsterBase;
 class Monster : public MonsterBase
 {
 public:
@@ -13,6 +14,11 @@ public:
 	void changeState(float dt);
 	RepeatForever * animatewalk;
 	RepeatForever * animateNormal;
+	RepeatForever * animateHit;
 
+	CCTMXTiledMap * getMap()
+	{
+		return (CCTMXTiledMap *) getParent();
+	}
 
 };
