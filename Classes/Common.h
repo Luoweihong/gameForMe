@@ -164,8 +164,8 @@ struct Common
 
 	static void BuildHeap(Vector<Sprite *> nodes, int size)
 	{
-		int i;
-		for (size_t i = size/2-1; i >0; i--)
+		
+		for (int i = size/2-1; i >0; i--)
 		{
 			HeapAdjust(nodes, i, size);
 		}

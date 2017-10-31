@@ -19,7 +19,7 @@ bool Monster::init(String name)
 	face = LEFT;
 	Common::createAnimate("./monster/yudu.plist", 14);
 	Common::createAnimate("./monster/yuduwalk", "yuduwalk", 8);
-	Common::createAnimate("./monster/yuduhit","yuduhit",10);
+	Common::createAnimate("./monster/yuduhit","yuduhit",15,1);
 	return true;
 }
 
@@ -37,7 +37,7 @@ Monster * Monster::create(String name)
 
 void Monster::update(float dt)
 {
-	if (state==MonsterBase::STATE::WALK)
+	if (state==STATE::WALK)
 	{
 		if (animatewalk == nullptr)
 		{
@@ -83,7 +83,7 @@ void Monster::update(float dt)
 
 			this->animateNormal = animateNormal;
 			runAction(animateNormal);
-			scheduleOnce(schedule_selector(Monster::changeState, this), 2);
+			scheduleOnce(SEL_SCHEDULE(&Monster::changeState), 2);
 		}
 	}
 	else if (state == MonsterBase::ATTACK)
@@ -96,7 +96,7 @@ void Monster::update(float dt)
 		int abs = fabs(monsterX - heroX);
 		if (monsterX-heroX>=0.0000001)
 		{
-			CCLOG("face to left");
+		
 			if (face!= FACE::LEFT)
 			{
 				face = FACE::LEFT;
@@ -106,7 +106,7 @@ void Monster::update(float dt)
 		} 
 		else
 		{
-			CCLOG("face to right");
+	
 			if (face != FACE::RIGHT)
 			{
 				face = FACE::RIGHT;
@@ -126,9 +126,20 @@ void Monster::update(float dt)
 				stopAllActions();
 				animatewalk = nullptr;
 				animateNormal = nullptr;
-				RepeatForever *hit = CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("yuduhit")));
+				CCAnimate *hit = CCAnimate::create((CCAnimationCache::sharedAnimationCache()->animationByName("yuduhit")));
 				animateHit = hit;
-				runAction(hit);
+				
+				
+				
+				CCCallFunc * callback = CCCallFunc::create([this](){
+					animateHit = nullptr;
+					animatewalk == nullptr;
+					this->scheduleUpdate();
+				});
+				DelayTime * delay = DelayTime::create(0.1f);
+				Sequence * squence = Sequence::create(animateHit,delay ,callback, NULL);
+				unscheduleUpdate();
+				runAction(squence);
 			}
 			
 		} 
