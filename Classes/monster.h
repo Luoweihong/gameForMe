@@ -4,7 +4,6 @@
 #include "stateMachine.h"
 #include "Common.h"
 USING_NS_CC;
-class MonsterBase;
 class Monster : public MonsterBase
 {
 public:

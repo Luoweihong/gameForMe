@@ -1,3 +1,4 @@
+#pragma once
 #include "MonsterBase.h"
 #include "config.h"
 MonsterBase * MonsterBase::create(String name)

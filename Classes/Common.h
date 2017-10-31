@@ -141,17 +141,66 @@ struct Common
 		return animate;
 	}
 
-	void HeapSort(Vector<Sprite> nodes, int size)
+	static void HeapSort(Vector<Sprite *> nodes, int size)
 	{
 		int i;
-		BuildHeap(nodes,size);
+		BuildHeap(nodes, size);
+
+		for (i = size-1; i > 0; i--)
+		{
+			//cout<<a[1]<<" ";
+			Sprite * first = nodes.at(0);
+			Sprite * parent = nodes.at(i);
+
+			nodes.replace(i, first);
+			nodes.replace(1, parent);       //交换堆顶和最后一个元素，即每次将剩余元素中的最大者放到最后面 
+			//BuildHeap(a,i-1);        //将余下元素重新建立为大顶堆 
+			HeapAdjust(nodes, 1, i - 1);      //重新调整堆顶节点成为大顶堆
+		}
+
+
+
 	}
 
-	void BuildHeap(Vector<Sprite> nodes, int size)
+	static void BuildHeap(Vector<Sprite *> nodes, int size)
 	{
+		int i;
+		for (size_t i = size/2-1; i >0; i--)
+		{
+			HeapAdjust(nodes, i, size);
+		}
+
 
 	}
+	static void HeapAdjust(Vector<Sprite *>nodes, int i, int size)
+	{
+		ssize_t lchild = 2 * i;
+		ssize_t rchild = 2 * i + 1;
+		ssize_t max = i;
 
+		if (i<=size/2-1)
+		{
+			if (lchild <= size&&nodes.at(lchild)->getPositionX()>nodes.at(max)->getPositionX())
+			{
+				max = lchild;
+			}
+			if (rchild <= size&&nodes.at(rchild)->getPositionX()>nodes.at(max)->getPositionX())
+			{
+				max = rchild;
+			}
+		}
+		if (max != i)
+		{
+			Sprite * child=nodes.at(max);
+			Sprite * parent = nodes.at(i);
+
+			nodes.replace(i, child);
+			nodes.replace(max, parent);
+
+			HeapAdjust(nodes, max, size);    //避免调整之后以max为父节点的子树不是堆 
+		}
+
+	}
 
 
 };

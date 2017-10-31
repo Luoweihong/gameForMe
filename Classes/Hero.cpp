@@ -18,7 +18,7 @@ bool Hero::init()
 	SpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(sprf, String::createWithFormat("walk%d.png", i)->getCString());
 	}*/
 	initWithFile("./Hero/dengmao (1).png");
-	//创建动画
+	//鍒涘缓鍔ㄧ敾
 	_stay = Common::createAnimate("./Hero/dengmao", "dengmao", 4);
 	_walk = Common::createAnimate("./Hero/dengmaowalk", "dengmaowalk", 8);
 	Common::createAnimate("./Hero/dengmaohit", "hit", 11, 1);
@@ -51,7 +51,7 @@ Hero * Hero::create()
 
 bool Hero::canMoveDown(float dt)
 {
-	//拿到MAP 对象 遍历所有的格子
+	//鎷垮埌MAP 瀵硅薄 閬嶅巻鎵�鏈夌殑鏍煎瓙
 
 
 	CCTMXTiledMap * map = getMap();
@@ -60,7 +60,7 @@ bool Hero::canMoveDown(float dt)
 		return false;
 	}
 	CCRect rcMario = boundingBox();
-	//拿到层
+	//鎷垮埌灞?
 
 	CCPoint pt[3];
 	pt[0] = ccp(rcMario.getMidX(), rcMario.getMinY() - dt*_speedDown);
@@ -120,15 +120,15 @@ void Hero::run()
 		CCSpriteFrame* frame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(str);
 		CCAnimationFrame* animationFrame = new CCAnimationFrame();
 
-		animationFrame->setSpriteFrame(frame); //设置精灵帧
-		animationFrame->setDelayUnits(i);    //设置间隔帧数
+		animationFrame->setSpriteFrame(frame); //璁剧疆绮剧伒甯?
+		animationFrame->setDelayUnits(i);    //璁剧疆闂撮殧甯ф暟
 
 		array.pushBack(animationFrame);
 	}
 
-	//使用动画帧数组创建，单位帧间隔0.2秒
+	//浣跨敤鍔ㄧ敾甯ф暟缁勫垱寤猴紝鍗曚綅甯ч棿闅?.2绉?
 
-	//使用动画帧数组创建，单位帧间隔0.2秒
+	//浣跨敤鍔ㄧ敾甯ф暟缁勫垱寤猴紝鍗曚綅甯ч棿闅?.2绉?
 	CCAnimation* animation = CCAnimation::create(array, 1.0 / 60);
 	animation->setRestoreOriginalFrame(true);
 	animation->setLoops(-1);
@@ -163,7 +163,7 @@ void Hero::update(float dt)
 
 	switch (dir)
 	{
-		//向右走
+		//鍚戝彸璧?
 	case 3:
 		CCLOG("%d", state);
 		moveLeft(dt);
@@ -188,7 +188,7 @@ void Hero::update(float dt)
 			  int gid = layer->tileGIDAt(ptTile);
 			  if (gid != 0)
 			  {
-				  CCLOG("传送11111");
+				  CCLOG("浼犻�?1111");
 				  unscheduleUpdate();
 				  SceneMgr * sceneMgr = SceneMgr::getSceneMgr();
 				  sceneMgr->changeScene("./map/map2.tmx");
@@ -300,7 +300,7 @@ bool Hero::canMoveUp(float dt)
 	for (int i = 0; i < strlen(layername); i++)
 	{
 		CCTMXLayer *layer = map->layerNamed("land");
-		//点转换成格子坐标
+		//鐐硅浆鎹㈡垚鏍煎瓙鍧愭爣
 		for (int i = 0; i < 1; i++)
 		{
 			Vec2  ptTile = Common::Point2Tile2(map, pt[i]);
@@ -404,28 +404,24 @@ void Hero::skillRelease(int skill_id)
 	case 1:
 	{
 			  state = ATTACK;
-			  //寻找怪物
-
+			
+			  Vector<Sprite *> monsters=MonsterManager::getMonsterManager()->monsters;
 			  if (MonsterManager::getMonsterManager()->monsters.size() == 0)
 			  {
 				  return;
 			  }
 			  Monster * monster;
-			  //距离排序
-			  //堆排之后 找到离得最近的怪物 让人物跟随过去
-
-
-
-
 			  for each (monster in  MonsterManager::getMonsterManager()->monsters)
 			  {
 				  Vec2 distance = monster->getPosition() - this->getPosition();
 
-				  if (fabs(distance.x) < 50 && fabs(distance.y) < 50)
+				  if (fabs(distance.x) < 100 && fabs(distance.y) < 100)
 				  {
 					  monster->state = MonsterBase::ATTACK;
 				  }
 			  }
+
+			  Common::HeapSort(monsters, monsters.size());
 
 
 			  CCCallFunc *callfun = CCCallFunc::create([&](){

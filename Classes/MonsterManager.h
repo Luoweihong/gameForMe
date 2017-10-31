@@ -23,7 +23,12 @@ public:
 		monsterManager = new MonsterManager;
 
 	}
-	std::vector<MonsterBase *> monsters;
+	Vector<Sprite *> getMonsters()
+	{
+		return monsters;
+	}
+
+	Vector<Sprite *> monsters;
 protected:
 private:
 	MonsterManager(){
