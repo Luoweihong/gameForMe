@@ -421,7 +421,14 @@ void Hero::skillRelease(int skill_id)
 				  }
 			  }
 
+			  //排序怪物距离，找到距离最小的，人物追寻
 			  Common::HeapSort(monsters, monsters.size());
+
+			  for each (monster in  MonsterManager::getMonsterManager()->monsters)
+			  {
+				  CCLOG("%f", monster->getPositionX());
+			  }
+
 
 
 			  CCCallFunc *callfun = CCCallFunc::create([&](){
