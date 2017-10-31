@@ -3,6 +3,7 @@
 #include "SceneMgr.h"
 #include "monster.h"
 #include "MonsterManager.h"
+#include "FlyWord.h"
 bool Hero::init()
 {
 
@@ -18,7 +19,6 @@ bool Hero::init()
 	SpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(sprf, String::createWithFormat("walk%d.png", i)->getCString());
 	}*/
 	initWithFile("./Hero/dengmao (1).png");
-	//创建动画
 	_stay = Common::createAnimate("./Hero/dengmao", "dengmao", 4);
 	_walk = Common::createAnimate("./Hero/dengmaowalk", "dengmaowalk", 8);
 	Common::createAnimate("./Hero/dengmaohit", "hit", 11, 1);
@@ -31,7 +31,6 @@ bool Hero::init()
 	_speedDown = _speedAcc;
 	setAnchorPoint(Vec2(0, 0));
 	stateMachine = new StateMachine;
-
 	state = STATE::STAY;
 	stateMachine->init();
 	scheduleUpdate();
@@ -51,7 +50,7 @@ Hero * Hero::create()
 
 bool Hero::canMoveDown(float dt)
 {
-	//拿到MAP 对象 遍历所有的格子
+	
 
 
 	CCTMXTiledMap * map = getMap();
@@ -60,7 +59,6 @@ bool Hero::canMoveDown(float dt)
 		return false;
 	}
 	CCRect rcMario = boundingBox();
-	//拿到�?
 
 	CCPoint pt[3];
 	pt[0] = ccp(rcMario.getMidX(), rcMario.getMinY() - dt*_speedDown);
@@ -71,7 +69,7 @@ bool Hero::canMoveDown(float dt)
 		return true;
 	for (int i = 0; i < 3; i++)
 	{
-		CCPoint ptTile = Common::Point2Tile(map, pt[i]);
+		CCPoint ptTile = Common::Point2Tile2(map, pt[i]);
 		static const char* layerName[2] = { "land", "land2" };
 		for (int j = 0; j < sizeof(layerName) / 4; ++j)
 		{
@@ -85,7 +83,7 @@ bool Hero::canMoveDown(float dt)
 			{
 				_speedDown = _speedAcc;
 				CCPoint ptLB = Common::Tile2PointLB(map, ptTile + ccp(0, -1));
-				this->setPositionY(ptLB.y - 20);
+				this->setPositionY(ptLB.y - 15);
 				return false;
 			}
 		}
@@ -120,15 +118,13 @@ void Hero::run()
 		CCSpriteFrame* frame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(str);
 		CCAnimationFrame* animationFrame = new CCAnimationFrame();
 
-		animationFrame->setSpriteFrame(frame); //设置精灵�?
-		animationFrame->setDelayUnits(i);    //设置间隔帧数
+		animationFrame->setSpriteFrame(frame); 
+		animationFrame->setDelayUnits(i);    
 
 		array.pushBack(animationFrame);
 	}
 
-	//使用动画帧数组创建，单位帧间�?.2�?
-
-	//使用动画帧数组创建，单位帧间�?.2�?
+	
 	CCAnimation* animation = CCAnimation::create(array, 1.0 / 60);
 	animation->setRestoreOriginalFrame(true);
 	animation->setLoops(-1);
@@ -163,9 +159,7 @@ void Hero::update(float dt)
 
 	switch (dir)
 	{
-		//向右�?
 	case 3:
-		CCLOG("%d", state);
 		moveLeft(dt);
 		break;
 	case 4:
@@ -188,7 +182,6 @@ void Hero::update(float dt)
 			  int gid = layer->tileGIDAt(ptTile);
 			  if (gid != 0)
 			  {
-				  CCLOG("传�?1111");
 				  unscheduleUpdate();
 				  SceneMgr * sceneMgr = SceneMgr::getSceneMgr();
 				  sceneMgr->changeScene("./map/map2.tmx");
@@ -200,7 +193,6 @@ void Hero::update(float dt)
 		if (state != STATE::STAY)
 		{
 			state = STAY;
-			CCLOG("updataStatus(0);");
 			stopAllActions();
 			updataStatus(0);
 		}
@@ -223,7 +215,6 @@ void Hero::updataStatus(int state)
 	switch (state)
 	{
 	case 3:
-		CCLOG("dengmaowalk");
 		runAction(CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmaowalk"))));
 		break;
 
@@ -323,7 +314,15 @@ bool Hero::canMoveUp(float dt)
 
 void Hero::moveRight(float dt)
 {
-	if (state != STATE::WALK)
+	
+	FlyWord * flywor = FlyWord::create("123456", 500, Vec2(getContentSize().width, getContentSize().height));
+	this->addChild(flywor);
+	if (state == STATE::ATTACK)
+	{
+		
+		
+	}
+	else if (state != STATE::WALK)
 	{
 		CCLOG("dengmaowalk");
 		state = STATE::WALK;
@@ -355,8 +354,12 @@ void Hero::moveRight(float dt)
 
 void Hero::moveLeft(float dt)
 {
-
-	if (state != STATE::WALK)
+	
+	if (state == STATE::ATTACK)
+	{
+		
+	}
+	else if (state != STATE::WALK)
 	{
 		CCLOG("dengmaowalk");
 		state = STATE::WALK;
@@ -403,16 +406,17 @@ void Hero::skillRelease(int skill_id)
 	{
 	case 1:
 	{
-			  state = ATTACK;
-			
-			  Vector<Sprite *> monsters=MonsterManager::getMonsterManager()->monsters;
-			  if (MonsterManager::getMonsterManager()->monsters.size() == 0)
+			  _walk = nullptr;
+			  state = STATE::ATTACK;
+			  Vector<Sprite *> monsters = MonsterManager::getMonsterManager()->monsters;
+			  if (monsters.size() == 0)
 			  {
 				  return;
 			  }
-			  Monster * monster;
-			  for each (monster in  MonsterManager::getMonsterManager()->monsters)
+			 
+			  for  (Sprite *sprite : monsters)
 			  {
+				  Monster * monster = (Monster *)sprite;
 				  Vec2 distance = monster->getPosition() - this->getPosition();
 
 				  if (fabs(distance.x) < 100 && fabs(distance.y) < 100)
@@ -421,25 +425,59 @@ void Hero::skillRelease(int skill_id)
 				  }
 			  }
 
-			  //���������룬�ҵ�������С�ģ�����׷Ѱ
+			  //ƅѲږϯߠkì֒սߠkخСքìɋϯ׷Ѱ
 			  Common::HeapSort(monsters, monsters.size());
+			  Monster * monster =(Monster *) monsters.at(0);
+			  //ȸֽؖغ
+				  std::function<void(float dt)> findMonster;
 
-			  for each (monster in  MonsterManager::getMonsterManager()->monsters)
-			  {
-				  CCLOG("%f", monster->getPositionX());
-			  }
+				  findMonster = [&, monster](float dt){
+					  Vec2 distance = monster->getPosition() - this->getPosition();
 
+					  if (fabs(distance.x)>50&&fabs(distance.y)<50)
+					  {
+						  int ispositive = this->getPositionX() - monster->getPositionX() > 0 ? -1 : 1;
 
+						  if (_walk == nullptr)
+						  {
+							  _walk = (Animate *)CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmaowalk")));
+							  runAction(CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmaowalk"))));
 
-			  CCCallFunc *callfun = CCCallFunc::create([&](){
-				  CCLOG("state == NONE");
-				  state = STATE::NONE;
-				  CCLOG("state == NONE %d", state);
-			  });
-			  auto delay = DelayTime::create(0.2f);
-			  _hit = Animate::create(AnimationCache::getInstance()->getAnimation("hit"));
-			  CCSequence * sequence = CCSequence::create(_hit, delay, callfun, nullptr);
-			  runAction(sequence);
+						  }
+						 
+						  
+						  if (ispositive<0)
+						  {
+							  CCLOG("is attack %d", state );
+							  moveLeft(dt);
+							  
+						  }
+						  else
+						  {
+							  CCLOG("is attack %d", state );
+							  moveRight(dt);
+							 
+						  }
+					  } 
+					  else
+					  {
+						  monster->state = MonsterBase::ATTACK;
+						  stopAllActions();
+						  CCLOG("stop");
+						  CCCallFunc *callfun = CCCallFunc::create([&,this](){
+							  stopAllActions();
+							 this->state = STATE::NONE;
+							 _walk = nullptr;
+						  });
+						  DelayTime* delay = DelayTime::create(0.2f);
+						  _hit = Animate::create(AnimationCache::getInstance()->getAnimation("hit"));
+						  CCSequence * sequence = CCSequence::create(_hit, callfun, nullptr);
+						  runAction(sequence);
+						  CCLOG("unschedule");
+						  unschedule("findMonster");
+					  }
+				  };
+				  schedule(findMonster, "findMonster");
 	}
 		break;
 	default:
