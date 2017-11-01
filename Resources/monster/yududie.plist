@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>frames</key>
+        <dict>
+            <key>yududie (1).png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,2},{268,151}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{268,151}}</string>
+                <key>sourceSize</key>
+                <string>{268,151}</string>
+            </dict>
+            <key>yududie (2).png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{270,216},{260,139}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{260,139}}</string>
+                <key>sourceSize</key>
+                <string>{260,139}</string>
+            </dict>
+            <key>yududie (3).png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,155},{266,131}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{266,131}}</string>
+                <key>sourceSize</key>
+                <string>{266,131}</string>
+            </dict>
+            <key>yududie (4).png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{272,2},{235,133}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{235,133}}</string>
+                <key>sourceSize</key>
+                <string>{235,133}</string>
+            </dict>
+            <key>yududie (5).png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,288},{206,77}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{206,77}}</string>
+                <key>sourceSize</key>
+                <string>{206,77}</string>
+            </dict>
+            <key>yududie (6).png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{272,137},{207,77}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{207,77}}</string>
+                <key>sourceSize</key>
+                <string>{207,77}</string>
+            </dict>
+        </dict>
+        <key>metadata</key>
+        <dict>
+            <key>format</key>
+            <integer>2</integer>
+            <key>realTextureFileName</key>
+            <string>yududie.png</string>
+            <key>size</key>
+            <string>{512,512}</string>
+            <key>smartupdate</key>
+            <string>$TexturePacker:SmartUpdate:db4556dfbc9a62288d54094b638be40d:2c2811f38837a4e308567ac1d339c7c0:97b82ba14d3fa5ba4c541368e3d3313a$</string>
+            <key>textureFileName</key>
+            <string>yududie.png</string>
+        </dict>
+    </dict>
+</plist>
