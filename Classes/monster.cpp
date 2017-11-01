@@ -2,6 +2,7 @@
 #include "config.h"
 #include "Common.h"
 #include "Hero.h"
+#include "FlyWord.h"
 bool Monster::init(String name)
 {
 	if (!Sprite::init())
@@ -189,5 +190,14 @@ void Monster::changeState(float dt)
 		this->state = NORMAL;
 		animatewalk = nullptr;
 	}
+}
+
+void Monster::getDownHP(int num)
+{
+	
+	FlyWord * flyword = FlyWord::create("-10", 20, Vec2(this->getContentSize().width / 3, this->getContentSize().height));
+	addChild(flyword, 127);
+
+
 }
 
