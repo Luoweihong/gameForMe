@@ -94,9 +94,19 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-	auto sceneMgr = SceneMgr::getSceneMgr();
 
-	auto scene = sceneMgr->createScene();
+	CCLOG("GAME START");
+	FileUtils::getInstance()->addSearchPath("res");
+	FileUtils::getInstance()->addSearchPath("res/monster");
+	FileUtils::getInstance()->addSearchPath("res/Hero");
+	FileUtils::getInstance()->addSearchPath("res/mapBlock");
+	FileUtils::getInstance()->addSearchPath("res/map");
+	FileUtils::getInstance()->addSearchPath("res/config");
+	FileUtils::getInstance()->addSearchPath("res/skill");
+	FileUtils::getInstance()->addSearchPath("res/fonts");
+	SceneMgr* sceneMgr = SceneMgr::getSceneMgr();
+
+	Scene* scene = sceneMgr->createScene();
 
     // run
     director->runWithScene(scene);

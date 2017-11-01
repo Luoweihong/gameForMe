@@ -2,9 +2,10 @@
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include "cocostudio/CocoStudio.h"
+class Hero;
 USING_NS_CC;
 using namespace ui;
-class Hero;
+
 class MapUI :public Layer
 {
 public:

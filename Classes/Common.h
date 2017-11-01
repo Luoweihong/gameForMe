@@ -201,24 +201,41 @@ struct Common
 		}
 	}
 
-	static String numToString(int num)
+	static String* numToString(int num)
 	{
-		String s;
-		char number[100];
+		char number[100] = { 0 };
+		
 		int temp = 0; 
 		int i = 0;
 		while (num / 10)
 		{
 			temp = num % 10;
 			num = num / 10;
-			number[i] = temp - '0';
+			number[i] = temp + '0';
 			i++;
 		}
 		temp = num % 10;
-		number[i] = temp - '0';
+		number[i] = temp + '0';
+
+		int head = 0;
+		int tail = strlen(number)-1;
+
+		while(tail>head)
+		{
+			char temp = number[head];
+			number[head]=number[tail];
+			number[tail] = temp;
+			head++;
+			tail--;
+		}
+
+
+
+
+		return String::create(number);
 	}
 
-
+	
 };
 
 #endif

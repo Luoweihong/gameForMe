@@ -20,7 +20,7 @@ bool FlyWord::init(const char *word, const int fontSize, CCPoint begin){
 	}
 	//初始化
 	_begin = begin;
-	m_plabel = CCLabelTTF::create(word, "Marker Felt", fontSize);
+	m_plabel = CCLabelBMFont::create(word, "./fonts/damage.fnt", fontSize);
 
 	//设置颜色
 	ccColor3B RGB;
@@ -42,12 +42,13 @@ bool FlyWord::init(const char *word, const int fontSize, CCPoint begin){
 void FlyWord::Flying()
 {
 
-	CCMoveBy* moveact = CCMoveBy::create(0.5f, CCPointMake(0, 70));//0.5秒向上移动70
+	CCMoveBy* moveact = CCMoveBy::create(0.3f, CCPointMake(0, 70));//0.5秒向上移动70
 
 	//创建回调动作，文字飘动完后
-	CCCallFunc* callFunc = CCCallFunc::create(this, callfunc_selector(FlyWord::Flyend));
+	CCCallFunc* callFunc = CCCallFunc::create(this,callfunc_selector(FlyWord::Flyend));
 	//创建连续动作
-	Sequence* act = CCSequence::create(moveact, callFunc, NULL);
+	DelayTime *time = DelayTime::create(0.5f);
+	Sequence* act = CCSequence::create(moveact,time, callFunc, NULL);
 	//setVisible(true);
 	this->runAction(act);
 
@@ -58,5 +59,5 @@ void FlyWord::Flyend()
 	//完成之后把该对象从内存中删除掉
 	CCLOG("FLYend");
 	this->removeAllChildrenWithCleanup(true);
-	removeAllChildren();
+	getParent()->removeChild(this, true);
 }

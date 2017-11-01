@@ -9,11 +9,20 @@ public:
 	ValueMap readDataFromJson(char *filename,char* ObjectName);
 	
 
-	static DataManager * getDataManager();
+	static DataManager * getDataManager()
+	{
+		if (dataManager!=NULL)
+		{
+			return dataManager;
+		}
+		dataManager = new DataManager;
+		return dataManager;
+	}
 private:
-	static DataManager * dataManager;
 	DataManager()
 	{
 
 	}
+
+	static DataManager * dataManager;
 };

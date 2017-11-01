@@ -13,8 +13,9 @@ public:
 	void changeState(float dt);
 	RepeatForever * animatewalk;
 	RepeatForever * animateNormal;
-	RepeatForever * animateHit;
-
+	CCAnimate * animateHit;
+	CCAnimate * animateDie;
+	void getDownHP(int num);
 	CCTMXTiledMap * getMap()
 	{
 		return (CCTMXTiledMap *) getParent();
