@@ -42,12 +42,3 @@ ValueMap DataManager::readDataFromJson(char * filename,char * ObjectName)
 
 }
 
-DataManager* DataManager::getDataManager()
-{
-	if (dataManager != NULL)
-	{
-		return dataManager;
-	}
-	dataManager = new DataManager;
-	return dataManager;
-}

@@ -1,0 +1,19 @@
+info face="Arial" size=32 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1 outline=0
+common lineHeight=32 base=26 scaleW=256 scaleH=256 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0
+page id=0 file="damage_0.png"
+chars count=15
+char id=45   x=185   y=32    width=24    height=28    xoffset=0     yoffset=0     xadvance=19    page=0  chnl=15
+char id=48   x=185   y=0     width=26    height=31    xoffset=0     yoffset=0     xadvance=21    page=0  chnl=15
+char id=49   x=212   y=0     width=26    height=31    xoffset=-2     yoffset=0     xadvance=16    page=0  chnl=15
+char id=50   x=156   y=63    width=26    height=31    xoffset=0     yoffset=0     xadvance=21    page=0  chnl=15
+char id=51   x=183   y=63    width=26    height=31    xoffset=0     yoffset=0     xadvance=21    page=0  chnl=15
+char id=52   x=210   y=32    width=26    height=31    xoffset=0     yoffset=0     xadvance=21    page=0  chnl=15
+char id=53   x=0     y=103   width=26    height=31    xoffset=0     yoffset=0     xadvance=21    page=0  chnl=15
+char id=54   x=27    y=103   width=26    height=31    xoffset=0     yoffset=0     xadvance=21    page=0  chnl=15
+char id=55   x=54    y=103   width=26    height=31    xoffset=-1     yoffset=0     xadvance=19    page=0  chnl=15
+char id=56   x=81    y=102   width=26    height=31    xoffset=0     yoffset=0     xadvance=21    page=0  chnl=15
+char id=57   x=108   y=102   width=26    height=31    xoffset=0     yoffset=0     xadvance=21    page=0  chnl=15
+char id=68   x=78    y=63    width=77    height=38    xoffset=0     yoffset=-4    xadvance=77    page=0  chnl=15
+char id=70   x=0     y=0     width=184   height=62    xoffset=0     yoffset=-24   xadvance=184   page=0  chnl=15
+char id=83   x=0     y=63    width=77    height=39    xoffset=0     yoffset=-4    xadvance=77    page=0  chnl=15
+char id=117  x=135   y=102   width=13    height=15    xoffset=1     yoffset=11    xadvance=15    page=0  chnl=15

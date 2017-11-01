@@ -405,14 +405,15 @@ void Hero::skillRelease(int skill_id)
 	{
 	case 1:
 	{
-			  _walk = nullptr;
+			 
 			  state = STATE::ATTACK;
 			  Vector<Sprite *> monsters = MonsterManager::getMonsterManager()->monsters;
 			  if (monsters.size() == 0)
 			  {
+				  state = NONE;
 				  return;
 			  }
-
+			  _walk = nullptr;
 			  for (Sprite *sprite : monsters)
 			  {
 				  Monster * monster = (Monster *)sprite;
@@ -458,9 +459,15 @@ void Hero::skillRelease(int skill_id)
 				  }
 				  else
 				  {
-					  //写一个回调会比较好
-					  monster->state = MonsterBase::ATTACK;
-					  monster->getDownHP(10);
+					 
+					  if (monster->state!=MonsterBase::ATTACK && monster->state!=MonsterBase::DEAD)
+					  {
+						  monster->state = MonsterBase::ATTACK;
+					  }
+						
+
+					  monster->getDownHP(100);
+						
 					  CCLOG("%d,HP", monster->getHp());
 					  stopAllActions();
 					  CCLOG("stop");

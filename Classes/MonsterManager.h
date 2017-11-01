@@ -1,6 +1,7 @@
 #pragma once
 #include "cocos2d.h"
 #include "MonsterBase.h"
+#include "monster.h"
 USING_NS_CC;
 class MonsterManager 
 {

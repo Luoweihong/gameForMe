@@ -16,6 +16,7 @@ void SceneMgr::changeScene(String name)
 
  Scene* SceneMgr::createScene()
 {
+	 CCLOG("SCENEMANAGER..................");
 	Scene * s = Scene::create();
 	mapUI = MapUI::create("sg.tmx");
 	s->addChild(mapUI);
