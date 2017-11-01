@@ -199,7 +199,23 @@ struct Common
 
 			HeapAdjust(nodes, max, size);    //避免调整之后以max为父节点的子树不是堆 
 		}
+	}
 
+	static String numToString(int num)
+	{
+		String s;
+		char number[100];
+		int temp = 0; 
+		int i = 0;
+		while (num / 10)
+		{
+			temp = num % 10;
+			num = num / 10;
+			number[i] = temp - '0';
+			i++;
+		}
+		temp = num % 10;
+		number[i] = temp - '0';
 	}
 
 

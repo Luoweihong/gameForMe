@@ -159,7 +159,7 @@ void JoyStick::jump(CCObject *)
 	
 	Hero * hero = (Hero *)tmx->getChildByName("hero");
 	hero->setSpeedUp(300);
-	hero->updataStatus(1);
+	
 
 
 }
@@ -184,6 +184,13 @@ void JoyStick::addCtrl()
 	addChild(menu);
 }
 
+Hero * JoyStick::setHero()
+{
+	MapUI * map = (MapUI *)getParent();
+	hero = map->getHero();
+	return hero;
+}
+
 void JoyStick::skillRelease(CCObject * sender)
 {
 	//判断点击的是哪个技能
@@ -191,14 +198,14 @@ void JoyStick::skillRelease(CCObject * sender)
 	int id =skill->getTag();
 
 	setHero();
-	hero->skillRelease(id);
+
+	if (hero->state != Hero::STATE::ATTACK)
+	{
+		hero->skillRelease(id);
+	}
+	
 
 	CCLOG("%d", id);
 }
 
-Hero * JoyStick::setHero()
-{
-	MapUI * map = (MapUI *)getParent();
-	hero = map->getHero();
-	return hero;
-}
+

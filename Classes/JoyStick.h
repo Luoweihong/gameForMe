@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"  
 #include "mapUI.h"
+USING_NS_CC;
 class Hero;
 /*定义摇杆方向的枚举*/
 enum direction
@@ -18,13 +19,13 @@ enum direction
 	L_DOWN
 
 };
-class JoyStick : public cocos2d::Layer
+class JoyStick : public Layer
 {
 public:
 	
 	static  direction  dir;
 	virtual bool init() override;
-	void JoyStick::checkDirection(float angle);
+	void checkDirection(float angle);
 	void addCtrl();
 
 	CREATE_FUNC(JoyStick);
@@ -39,9 +40,9 @@ public:
 	void skillRelease(CCObject *);
 private:
 
-	cocos2d::EventListenerTouchOneByOne* listener;  /*定义为成员变量，方便移除监听*/
-	cocos2d::Sprite* rocker;  /*方便获取*/
-	cocos2d::Sprite* rocker_bg;  /*方便获取*/
+	EventListenerTouchOneByOne* listener;  /*定义为成员变量，方便移除监听*/
+	Sprite* rocker;  /*方便获取*/
+	Sprite* rocker_bg;  /*方便获取*/
 };
 
 #endif  

@@ -36,7 +36,7 @@ public:
 	 CC_SYNTHESIZE(int, _speed, Speed);
 	 static MonsterBase * create(String name);
 
-	 void MonsterBase::runAnimate(char * filename, int count)
+	 void runAnimate(char * filename, int count)
 	 {
 		 Animate * animate = Common::createAnimate(filename, count);
 		 this->runAction(animate);

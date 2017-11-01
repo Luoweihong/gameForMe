@@ -50,7 +50,7 @@ Hero * Hero::create()
 
 bool Hero::canMoveDown(float dt)
 {
-	
+
 
 
 	CCTMXTiledMap * map = getMap();
@@ -118,13 +118,13 @@ void Hero::run()
 		CCSpriteFrame* frame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(str);
 		CCAnimationFrame* animationFrame = new CCAnimationFrame();
 
-		animationFrame->setSpriteFrame(frame); 
-		animationFrame->setDelayUnits(i);    
+		animationFrame->setSpriteFrame(frame);
+		animationFrame->setDelayUnits(i);
 
 		array.pushBack(animationFrame);
 	}
 
-	
+
 	CCAnimation* animation = CCAnimation::create(array, 1.0 / 60);
 	animation->setRestoreOriginalFrame(true);
 	animation->setLoops(-1);
@@ -314,13 +314,12 @@ bool Hero::canMoveUp(float dt)
 
 void Hero::moveRight(float dt)
 {
-	
-	FlyWord * flywor = FlyWord::create("123456", 500, Vec2(getContentSize().width, getContentSize().height));
-	this->addChild(flywor);
+
+
 	if (state == STATE::ATTACK)
 	{
-		
-		
+
+
 	}
 	else if (state != STATE::WALK)
 	{
@@ -354,10 +353,10 @@ void Hero::moveRight(float dt)
 
 void Hero::moveLeft(float dt)
 {
-	
+
 	if (state == STATE::ATTACK)
 	{
-		
+
 	}
 	else if (state != STATE::WALK)
 	{
@@ -413,8 +412,8 @@ void Hero::skillRelease(int skill_id)
 			  {
 				  return;
 			  }
-			 
-			  for  (Sprite *sprite : monsters)
+
+			  for (Sprite *sprite : monsters)
 			  {
 				  Monster * monster = (Monster *)sprite;
 				  Vec2 distance = monster->getPosition() - this->getPosition();
@@ -425,59 +424,60 @@ void Hero::skillRelease(int skill_id)
 				  }
 			  }
 
-			  //ƅѲږϯߠkì֒սߠkخСքìɋϯ׷Ѱ
+
 			  Common::HeapSort(monsters, monsters.size());
-			  Monster * monster =(Monster *) monsters.at(0);
-			  //ȸֽؖغ
-				  std::function<void(float dt)> findMonster;
+			  Monster * monster = (Monster *)monsters.at(0);
 
-				  findMonster = [&, monster](float dt){
-					  Vec2 distance = monster->getPosition() - this->getPosition();
+			  std::function<void(float dt)> findMonster;
 
-					  if (fabs(distance.x)>50&&fabs(distance.y)<50)
+			  findMonster = [&, monster](float dt){
+				  Vec2 distance = monster->getPosition() - this->getPosition();
+
+				  if (fabs(distance.x) > 50 && fabs(distance.y)<50)
+				  {
+					  int ispositive = this->getPositionX() - monster->getPositionX() > 0 ? -1 : 1;
+
+					  if (_walk == nullptr)
 					  {
-						  int ispositive = this->getPositionX() - monster->getPositionX() > 0 ? -1 : 1;
+						  _walk = (Animate *)CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmaowalk")));
+						  runAction(CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmaowalk"))));
 
-						  if (_walk == nullptr)
-						  {
-							  _walk = (Animate *)CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmaowalk")));
-							  runAction(CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmaowalk"))));
+					  }
 
-						  }
-						 
-						  
-						  if (ispositive<0)
-						  {
-							  CCLOG("is attack %d", state );
-							  moveLeft(dt);
-							  
-						  }
-						  else
-						  {
-							  CCLOG("is attack %d", state );
-							  moveRight(dt);
-							 
-						  }
-					  } 
+
+					  if (ispositive < 0)
+					  {
+						  moveLeft(dt);
+
+					  }
 					  else
 					  {
-						  monster->state = MonsterBase::ATTACK;
-						  stopAllActions();
-						  CCLOG("stop");
-						  CCCallFunc *callfun = CCCallFunc::create([&,this](){
-							  stopAllActions();
-							 this->state = STATE::NONE;
-							 _walk = nullptr;
-						  });
-						  DelayTime* delay = DelayTime::create(0.2f);
-						  _hit = Animate::create(AnimationCache::getInstance()->getAnimation("hit"));
-						  CCSequence * sequence = CCSequence::create(_hit, callfun, nullptr);
-						  runAction(sequence);
-						  CCLOG("unschedule");
-						  unschedule("findMonster");
+						  moveRight(dt);
+
 					  }
-				  };
-				  schedule(findMonster, "findMonster");
+				  }
+				  else
+				  {
+					  //写一个回调会比较好
+					  monster->state = MonsterBase::ATTACK;
+					  monster->getDownHP(10);
+					  CCLOG("%d,HP", monster->getHp());
+					  stopAllActions();
+					  CCLOG("stop");
+					  CCCallFunc *callfun = CCCallFunc::create([&, this](){
+						  stopAllActions();
+						  this->state = STATE::NONE;
+						  _walk = nullptr;
+					  });
+					  DelayTime* delay = DelayTime::create(0.2f);
+					  _hit = Animate::create(AnimationCache::getInstance()->getAnimation("hit"));
+					  CCSequence * sequence = CCSequence::create(_hit, callfun, nullptr);
+					  runAction(sequence);
+					  CCLOG("unschedule");
+					  unschedule("findMonster");
+				  }
+			  };
+			  schedule(findMonster, "findMonster");
 	}
 		break;
 	default:

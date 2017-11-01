@@ -19,7 +19,7 @@ bool Monster::init(String name)
 	face = LEFT;
 	Common::createAnimate("./monster/yudu.plist", 14);
 	Common::createAnimate("./monster/yuduwalk", "yuduwalk", 8);
-	Common::createAnimate("./monster/yuduhit","yuduhit",15,1);
+	Common::createAnimate("./monster/yuduhit","yuduhit",10,1);
 	return true;
 }
 
@@ -127,7 +127,7 @@ void Monster::update(float dt)
 				animatewalk = nullptr;
 				animateNormal = nullptr;
 				CCAnimate *hit = CCAnimate::create((CCAnimationCache::sharedAnimationCache()->animationByName("yuduhit")));
-				animateHit = hit;
+				animateHit = (RepeatForever  *)hit;
 				
 				
 				

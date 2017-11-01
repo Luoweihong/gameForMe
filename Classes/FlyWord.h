@@ -17,6 +17,6 @@ private:
 
 	int _fontSize;//字体大小
 	CCPoint _begin;//要添加到的怪物的中心点
-	CCLabelBMFont* m_plabel;//字体类型
+	CCLabelTTF* m_plabel;//字体类型
 
 };

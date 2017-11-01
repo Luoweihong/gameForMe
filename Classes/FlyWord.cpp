@@ -20,7 +20,7 @@ bool FlyWord::init(const char *word, const int fontSize, CCPoint begin){
 	}
 	//初始化
 	_begin = begin;
-	m_plabel = CCLabelBMFont::create(word, "./fonts/damage.fnt", fontSize);
+	m_plabel = CCLabelTTF::create(word, "Marker Felt", fontSize);
 
 	//设置颜色
 	ccColor3B RGB;

@@ -53,7 +53,7 @@ void MapUI::initHero(Sprite * hero,char * name)
 			float y = objInfo.at("y").asFloat();
 			hero->setPosition(ccp(x, y));
 			CCLOG("x:%f y: %f\n", x, y);
-			tmx->addChild(hero,127,name);
+			tmx->addChild(hero,50,name);
 		}
 	}
 }
