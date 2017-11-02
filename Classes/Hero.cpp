@@ -465,8 +465,11 @@ void Hero::skillRelease(int skill_id)
 						  monster->state = MonsterBase::ATTACK;
 					  }
 						
-
-					  monster->getDownHP(100);
+					  if (monster->getHp()>0)
+					  {
+						  monster->getDownHP(100);
+					  }
+					  
 						
 					  CCLOG("%d,HP", monster->getHp());
 					  stopAllActions();

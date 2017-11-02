@@ -189,7 +189,12 @@ void JoyStick::skillRelease(CCObject * sender)
 	CCMenuItemImage * skill = (CCMenuItemImage *)sender;
 	int id =skill->getTag();
 	setHero();
-	hero->skillRelease(id);
+
+	if (hero->state != Hero::ATTACK)
+	{
+		hero->skillRelease(id);
+	}
+	
 }
 
 Hero * JoyStick::setHero()
