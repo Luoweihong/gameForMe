@@ -16,7 +16,7 @@ bool JoyStick::init()
 	rocker_bg->setPosition(Vec2(150, 150));
 	addChild(rocker_bg);
 	rocker_bg->setScale(0.5);
-	
+	JoyStick::dir = STAY;
 	/*2. ´´½¨Ò¡¸Ë*/
 	rocker = Sprite::create("joystick.png");
 	rocker->setPosition(Vec2(150, 150));
@@ -189,7 +189,11 @@ void JoyStick::skillRelease(CCObject * sender)
 	CCMenuItemImage * skill = (CCMenuItemImage *)sender;
 	int id =skill->getTag();
 	setHero();
-	hero->skillRelease(id);
+	if (hero->state!=Hero::STATE::ATTACK)
+	{
+		hero->skillRelease(id);
+	}
+	
 }
 
 Hero * JoyStick::setHero()

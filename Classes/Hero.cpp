@@ -399,13 +399,11 @@ void Hero::moveLeft(float dt)
 
 void Hero::skillRelease(int skill_id)
 {
-
 	stopAllActions();
 	switch (skill_id)
 	{
 	case 1:
 	{
-			 
 			  state = STATE::ATTACK;
 			  Vector<Sprite *> monsters = MonsterManager::getMonsterManager()->monsters;
 			  if (monsters.size() == 0)
@@ -414,24 +412,52 @@ void Hero::skillRelease(int skill_id)
 				  return;
 			  }
 			  _walk = nullptr;
-			  for (Sprite *sprite : monsters)
-			  {
-				  Monster * monster = (Monster *)sprite;
-				  Vec2 distance = monster->getPosition() - this->getPosition();
+			  
+			  Common::HeapSort(monsters, monsters.size());
 
-				  if (fabs(distance.x) < 100 && fabs(distance.y) < 100)
+			  Monster * monster = nullptr;
+			  Monster * monster1;
+			  monster = (Monster *)monsters.at(0);
+			
+			 
+			  for (int i = 0; i < monsters.size()-1;i++)
+			  {
+				  monster1 = (Monster *)monsters.at(i + 1);
+
+
+				  //过滤X轴比较跟自己X 相差太大的
+				  if (fabs(this->getPositionY() - monster->getPositionY()) > 50)
 				  {
-					  monster->state = MonsterBase::ATTACK;
+					  monster = (Monster *)monsters.at(i + 1);
+					  continue;
+
+				  }
+				  if (fabs(this->getPositionY()-monster1->getPositionY())>50)
+				  {
+					  continue;
+				  }
+				  
+
+				  if (fabs(getPositionX()- monster1->getPositionX())<fabs(getPositionX()- monster->getPositionX()))
+				  {
+					  monster = monster1;
 				  }
 			  }
-
-
-			  Common::HeapSort(monsters, monsters.size());
-			  Monster * monster = (Monster *)monsters.at(0);
+			  if (fabs(this->getPositionY() - monster->getPositionY()) > 50)
+			  {
+				  monster = nullptr;
+			  }
+			  
 
 			  std::function<void(float dt)> findMonster;
 
 			  findMonster = [&, monster](float dt){
+				 if (monster==nullptr)
+				 {
+					 unschedule("findMonster");
+					 state = NONE;
+					 return;
+				 }
 				  Vec2 distance = monster->getPosition() - this->getPosition();
 
 				  if (fabs(distance.x) > 50 && fabs(distance.y)<50)

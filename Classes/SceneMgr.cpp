@@ -1,26 +1,30 @@
 #include "SceneMgr.h"
-
+#include "MonsterManager.h"
 MapUI* SceneMgr::mapUI = NULL;
 SceneMgr* SceneMgr::sceneMgr = NULL;
 void SceneMgr::changeScene(String name)
 {
-	//创建TMX
-	//拿到地图层
-	//初始化数据
+	
+	scene->removeAllChildren();
 
-	mapUI->removeAllChildren();
-	mapUI->init(name.getCString());
+	while (MonsterManager::getMonsterManager()->monsters.size() != 0)
+	{
+		MonsterManager::getMonsterManager()->monsters.popBack();
+	}
+	
+	mapUI = MapUI::create(name.getCString());
 	JoyStick * joystick = JoyStick::create();
 	mapUI->addChild(joystick, 128);
+	scene->addChild(mapUI);
 }
 
  Scene* SceneMgr::createScene()
 {
 	 CCLOG("SCENEMANAGER..................");
-	Scene * s = Scene::create();
+	scene = Scene::create();
 	mapUI = MapUI::create("sg.tmx");
-	s->addChild(mapUI);
+	scene->addChild(mapUI);
 	JoyStick* joystick = JoyStick::create();
 	mapUI->addChild(joystick, 128);
-	return s;
+	return scene;
 }
