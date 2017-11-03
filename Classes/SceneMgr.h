@@ -12,7 +12,7 @@ public:
 	Scene* createScene();
 	
   	void changeScene(String name);
-	Scene * scene;
+
 
 	static MapUI* getMap()
 	{

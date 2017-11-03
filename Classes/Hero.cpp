@@ -18,11 +18,12 @@ bool Hero::init()
 	SpriteFrame * sprf = SpriteFrame::create(String::createWithFormat("walk%d.png", i)->getCString(), CCRectMake(0, 0, 84, 63));
 	SpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(sprf, String::createWithFormat("walk%d.png", i)->getCString());
 	}*/
-	initWithFile("./Hero/dengmao (1).png");
-	_stay = Common::createAnimate("./Hero/dengmao", "dengmao", 4);
-	_walk = Common::createAnimate("./Hero/dengmaowalk", "dengmaowalk", 8);
-	Common::createAnimate("./Hero/dengmaohit", "hit", 11, 1);
-
+    
+	
+	_stay = Common::createAnimate("dengmao", "dengmao", 4);
+	_walk = Common::createAnimate("dengmaowalk", "dengmaowalk", 8);
+	Common::createAnimate("dengmaohit", "hit", 11, 1);
+     initWithSpriteFrame(SpriteFrameCache::sharedSpriteFrameCache()->getSpriteFrameByName("dengmao (1).png"));
 
 	runAction(_stay);
 	speed = 200;
@@ -43,7 +44,7 @@ Hero * Hero::create()
 	Hero * hero = new Hero;
 	if (!hero->init())
 	{
-		return false;
+		return nullptr;
 	}
 	return hero;
 }
@@ -399,11 +400,13 @@ void Hero::moveLeft(float dt)
 
 void Hero::skillRelease(int skill_id)
 {
+
 	stopAllActions();
 	switch (skill_id)
 	{
 	case 1:
 	{
+			 
 			  state = STATE::ATTACK;
 			  Vector<Sprite *> monsters = MonsterManager::getMonsterManager()->monsters;
 			  if (monsters.size() == 0)
@@ -412,52 +415,24 @@ void Hero::skillRelease(int skill_id)
 				  return;
 			  }
 			  _walk = nullptr;
-			  
+			  for (Sprite *sprite : monsters)
+			  {
+				  Monster * monster = (Monster *)sprite;
+				  Vec2 distance = monster->getPosition() - this->getPosition();
+
+				  if (fabs(distance.x) < 100 && fabs(distance.y) < 100)
+				  {
+					  monster->state = MonsterBase::ATTACK;
+				  }
+			  }
+
+
 			  Common::HeapSort(monsters, monsters.size());
-
-			  Monster * monster = nullptr;
-			  Monster * monster1;
-			  monster = (Monster *)monsters.at(0);
-			
-			 
-			  for (int i = 0; i < monsters.size()-1;i++)
-			  {
-				  monster1 = (Monster *)monsters.at(i + 1);
-
-
-				  //过滤X轴比较跟自己X 相差太大的
-				  if (fabs(this->getPositionY() - monster->getPositionY()) > 50)
-				  {
-					  monster = (Monster *)monsters.at(i + 1);
-					  continue;
-
-				  }
-				  if (fabs(this->getPositionY()-monster1->getPositionY())>50)
-				  {
-					  continue;
-				  }
-				  
-
-				  if (fabs(getPositionX()- monster1->getPositionX())<fabs(getPositionX()- monster->getPositionX()))
-				  {
-					  monster = monster1;
-				  }
-			  }
-			  if (fabs(this->getPositionY() - monster->getPositionY()) > 50)
-			  {
-				  monster = nullptr;
-			  }
-			  
+			  Monster * monster = (Monster *)monsters.at(0);
 
 			  std::function<void(float dt)> findMonster;
 
 			  findMonster = [&, monster](float dt){
-				 if (monster==nullptr)
-				 {
-					 unschedule("findMonster");
-					 state = NONE;
-					 return;
-				 }
 				  Vec2 distance = monster->getPosition() - this->getPosition();
 
 				  if (fabs(distance.x) > 50 && fabs(distance.y)<50)
