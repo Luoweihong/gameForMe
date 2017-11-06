@@ -4,31 +4,26 @@
 #include "monster.h"
 #include "MonsterManager.h"
 #include "FlyWord.h"
+#include "NPC.h"
+#include "UIMgr.h"
 bool Hero::init()
 {
-
 	if (!Sprite::init())
 	{
 		return true;
 	}
+	initWithFile("dengmao (1).png");
+	_stay = Common::createAnimate("dengmao", "dengmao", 4);
+	_walk = Common::createAnimate("dengmaowalk", "dengmaowalk", 8);
+	Common::createAnimate("dengmaohit", "hit", 11, 1);
 
-
-	/*for (int i = 1; i < 8; i++)
-	{
-	SpriteFrame * sprf = SpriteFrame::create(String::createWithFormat("walk%d.png", i)->getCString(), CCRectMake(0, 0, 84, 63));
-	SpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(sprf, String::createWithFormat("walk%d.png", i)->getCString());
-	}*/
-	initWithFile("./Hero/dengmao (1).png");
-	_stay = Common::createAnimate("./Hero/dengmao", "dengmao", 4);
-	_walk = Common::createAnimate("./Hero/dengmaowalk", "dengmaowalk", 8);
-	Common::createAnimate("./Hero/dengmaohit", "hit", 11, 1);
-
-
+	NotificationCenter::getInstance()->addObserver(this, callfuncO_selector(Hero::MoveToNpc),"click npc",nullptr);
 	runAction(_stay);
 	speed = 200;
 	_speedUp = 0;
 	_speedAcc = 10;
 	_speedDown = _speedAcc;
+	setisFlying(false);
 	setAnchorPoint(Vec2(0, 0));
 	stateMachine = new StateMachine;
 	state = STATE::STAY;
@@ -50,20 +45,16 @@ Hero * Hero::create()
 
 bool Hero::canMoveDown(float dt)
 {
-
-
-
 	CCTMXTiledMap * map = getMap();
 	if (map == NULL)
 	{
 		return false;
 	}
-	CCRect rcMario = boundingBox();
-
+	CCRect HeroRect = boundingBox();
 	CCPoint pt[3];
-	pt[0] = ccp(rcMario.getMidX(), rcMario.getMinY() - dt*_speedDown);
-	pt[1] = ccp(rcMario.getMinX(), rcMario.getMinY() - dt*_speedDown);
-	pt[2] = ccp(rcMario.getMaxX(), rcMario.getMinY() - dt*_speedDown);
+	pt[0] = ccp(HeroRect.getMidX(), HeroRect.getMinY() - dt*_speedDown);
+	pt[1] = ccp(HeroRect.getMidX(), HeroRect.getMinY() - dt*_speedDown);
+	pt[2] = ccp(HeroRect.getMidX(), HeroRect.getMinY() - dt*_speedDown);
 
 	if (pt[0].y >= map->getContentSize().height)
 		return true;
@@ -83,7 +74,7 @@ bool Hero::canMoveDown(float dt)
 			{
 				_speedDown = _speedAcc;
 				CCPoint ptLB = Common::Tile2PointLB(map, ptTile + ccp(0, -1));
-				this->setPositionY(ptLB.y - 15);
+				this->setPositionY(ptLB.y);
 				return false;
 			}
 		}
@@ -102,34 +93,9 @@ void Hero::moveDown(float dt)
 		}
 		else
 		{
-
+			setisFlying(false);
 		}
 	}
-}
-
-
-void Hero::run()
-{
-	Vector<CCAnimationFrame*> array;
-	for (int i = 1; i < 8; i++) {
-		char str[50];
-		sprintf(str, "walk%d.png", i);
-
-		CCSpriteFrame* frame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(str);
-		CCAnimationFrame* animationFrame = new CCAnimationFrame();
-
-		animationFrame->setSpriteFrame(frame);
-		animationFrame->setDelayUnits(i);
-
-		array.pushBack(animationFrame);
-	}
-
-
-	CCAnimation* animation = CCAnimation::create(array, 1.0 / 60);
-	animation->setRestoreOriginalFrame(true);
-	animation->setLoops(-1);
-	CCAnimate* animate = CCAnimate::create(animation);
-	runAction(animate);
 }
 
 void Hero::update(float dt)
@@ -141,8 +107,6 @@ void Hero::update(float dt)
 	key = GetKeyState('D');
 	if (key < 0) {
 		dir = 4;
-
-
 	}
 
 	key = GetKeyState('A');
@@ -184,8 +148,7 @@ void Hero::update(float dt)
 			  {
 				  unscheduleUpdate();
 				  SceneMgr * sceneMgr = SceneMgr::getSceneMgr();
-				  sceneMgr->changeScene("./map/map2.tmx");
-
+				  sceneMgr->changeScene("map2.tmx");
 			  }
 	}
 		break;
@@ -234,7 +197,7 @@ bool Hero::canMoveLeft(float dt)
 {
 	CCTMXTiledMap * map = getMap();
 	Vec2 ptInWorld = map->convertToWorldSpace(this->getPosition());
-	if (ptInWorld.x - this->getContentSize().width / 2 < 0)
+	if (ptInWorld.x <= 0)
 	{
 		return false;
 	}
@@ -246,7 +209,7 @@ bool Hero::canMoveRight(float)
 {
 	CCTMXTiledMap * map = getMap();
 	Vec2 ptInWorld = map->convertToWorldSpace(this->getPosition());
-	if (ptInWorld > winSize)
+	if (ptInWorld.x + this->getContentSize().width > winSize.width)
 	{
 		return false;
 	}
@@ -323,7 +286,7 @@ void Hero::moveRight(float dt)
 	}
 	else if (state != STATE::WALK)
 	{
-		CCLOG("dengmaowalk");
+		//CCLOG("dengmaowalk");
 		state = STATE::WALK;
 		stopAllActions();
 		updataStatus(3);
@@ -360,7 +323,7 @@ void Hero::moveLeft(float dt)
 	}
 	else if (state != STATE::WALK)
 	{
-		CCLOG("dengmaowalk");
+		//CCLOG("dengmaowalk");
 		state = STATE::WALK;
 		stopAllActions();
 		updataStatus(3);
@@ -395,10 +358,13 @@ void Hero::moveLeft(float dt)
 }
 
 
-
-
 void Hero::skillRelease(int skill_id)
 {
+
+	if (getisFlying())
+	{
+		return;
+	}
 	stopAllActions();
 	switch (skill_id)
 	{
@@ -412,15 +378,15 @@ void Hero::skillRelease(int skill_id)
 				  return;
 			  }
 			  _walk = nullptr;
-			  
+
 			  Common::HeapSort(monsters, monsters.size());
 
 			  Monster * monster = nullptr;
 			  Monster * monster1;
 			  monster = (Monster *)monsters.at(0);
-			
-			 
-			  for (int i = 0; i < monsters.size()-1;i++)
+
+
+			  for (int i = 0; i < monsters.size() - 1; i++)
 			  {
 				  monster1 = (Monster *)monsters.at(i + 1);
 
@@ -432,13 +398,13 @@ void Hero::skillRelease(int skill_id)
 					  continue;
 
 				  }
-				  if (fabs(this->getPositionY()-monster1->getPositionY())>50)
+				  if (fabs(this->getPositionY() - monster1->getPositionY()) > 50)
 				  {
 					  continue;
 				  }
-				  
 
-				  if (fabs(getPositionX()- monster1->getPositionX())<fabs(getPositionX()- monster->getPositionX()))
+
+				  if (fabs(getPositionX() - monster1->getPositionX())<fabs(getPositionX() - monster->getPositionX()))
 				  {
 					  monster = monster1;
 				  }
@@ -447,59 +413,45 @@ void Hero::skillRelease(int skill_id)
 			  {
 				  monster = nullptr;
 			  }
-			  
+
 
 			  std::function<void(float dt)> findMonster;
 
 			  findMonster = [&, monster](float dt){
-				 if (monster==nullptr)
-				 {
-					 unschedule("findMonster");
-					 state = NONE;
-					 return;
-				 }
+				  if (monster == nullptr)
+				  {
+					  unschedule("findMonster");
+					  state = NONE;
+					  return;
+				  }
 				  Vec2 distance = monster->getPosition() - this->getPosition();
 
-				  if (fabs(distance.x) > 50 && fabs(distance.y)<50)
+				  if (fabs(distance.x) > 30 && fabs(distance.y)<50)
 				  {
 					  int ispositive = this->getPositionX() - monster->getPositionX() > 0 ? -1 : 1;
-
 					  if (_walk == nullptr)
 					  {
 						  _walk = (Animate *)CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmaowalk")));
 						  runAction(CCRepeatForever::create(CCAnimate::create(CCAnimationCache::sharedAnimationCache()->animationByName("dengmaowalk"))));
-
 					  }
-
-
 					  if (ispositive < 0)
 					  {
 						  moveLeft(dt);
-
 					  }
 					  else
 					  {
 						  moveRight(dt);
-
 					  }
 				  }
 				  else
 				  {
-					 
-					  if (monster->state!=MonsterBase::ATTACK && monster->state!=MonsterBase::DEAD)
+					  if (monster->state != MonsterBase::ATTACK && monster->state != MonsterBase::DEAD)
 					  {
 						  monster->state = MonsterBase::ATTACK;
 					  }
-						
-					  if (monster->getHp()>0)
-					  {
-						  monster->getDownHP(100);
-					  }
-					  
-						
-					  CCLOG("%d,HP", monster->getHp());
+					  monster->getDownHP(100);
 					  stopAllActions();
-					  CCLOG("stop");
+					 // CCLOG("stop");
 					  CCCallFunc *callfun = CCCallFunc::create([&, this](){
 						  stopAllActions();
 						  this->state = STATE::NONE;
@@ -509,7 +461,7 @@ void Hero::skillRelease(int skill_id)
 					  _hit = Animate::create(AnimationCache::getInstance()->getAnimation("hit"));
 					  CCSequence * sequence = CCSequence::create(_hit, callfun, nullptr);
 					  runAction(sequence);
-					  CCLOG("unschedule");
+					  //CCLOG("unschedule");
 					  unschedule("findMonster");
 				  }
 			  };
@@ -519,6 +471,25 @@ void Hero::skillRelease(int skill_id)
 	default:
 		break;
 	}
+
+
+}
+
+
+
+void Hero::MoveToNpc(Ref * sender)
+{
+	CCLOG("move To Npc");
+	NPC * npc = (NPC *)sender;
+	//CCLOG("%f", npc->getPositionX());
+	//弹对话框 对话框如何显示  用什么来做-》layout layout里嵌套一个text
+	
+	String name=npc->getNpcName();
+
+	UIMgr * uiMgr = UIMgr::getUIMgr();
+	uiMgr->getCsb("MainScene.csb");
+
+
 
 
 }

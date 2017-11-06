@@ -25,6 +25,6 @@ void SceneMgr::changeScene(String name)
 	mapUI = MapUI::create("sg.tmx");
 	scene->addChild(mapUI);
 	JoyStick* joystick = JoyStick::create();
-	mapUI->addChild(joystick, 128);
+	mapUI->addChild(joystick, 120);
 	return scene;
 }
