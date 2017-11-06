@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="left-down" width="50" height="30" tilewidth="32" tileheight="32" nextobjectid="2">
+<map version="1.0" orientation="orthogonal" renderorder="left-down" width="50" height="30" tilewidth="32" tileheight="32" nextobjectid="8">
  <tileset firstgid="1" name="69012316846" tilewidth="32" tileheight="32" tilecount="1280" columns="40">
   <image source="../mapBlock/69012316846.jpg" width="1280" height="1024"/>
  </tileset>
@@ -112,7 +112,7 @@
 </data>
  </layer>
  <objectgroup name="hero">
-  <object id="1" name="birth" x="96" y="832" width="32" height="32"/>
+  <object id="1" name="birth" x="96" y="864" width="32" height="32"/>
  </objectgroup>
  <layer name="land2" width="50" height="30">
   <data encoding="csv">
@@ -216,4 +216,10 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup name="monster">
+  <object id="2" name="yudu" x="928" y="736" width="32" height="32"/>
+  <object id="3" name="yudu" x="1056" y="800" width="32" height="32"/>
+  <object id="4" name="yudu" x="544" y="704" width="32" height="32"/>
+  <object id="5" name="yudu" x="256" y="704" width="32" height="32"/>
+ </objectgroup>
 </map>
