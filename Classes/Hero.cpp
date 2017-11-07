@@ -360,6 +360,7 @@ void Hero::moveLeft(float dt)
 
 void Hero::skillRelease(int skill_id)
 {
+	
 
 	if (getisFlying())
 	{
@@ -418,6 +419,13 @@ void Hero::skillRelease(int skill_id)
 			  std::function<void(float dt)> findMonster;
 
 			  findMonster = [&, monster](float dt){
+				  if (JoyStick::dir!=STAY)
+				  {
+					  stopAllActions();
+					  state = NONE;
+					  unschedule("findMonster");
+				  }
+
 				  if (monster == nullptr)
 				  {
 					  unschedule("findMonster");
@@ -487,11 +495,7 @@ void Hero::MoveToNpc(Ref * sender)
 	String name=npc->getNpcName();
 
 	UIMgr * uiMgr = UIMgr::getUIMgr();
-	uiMgr->getCsb("MainScene.csb");
-
-
-
-
+	uiMgr->getCsb("Npc_Talk.csb");
 }
 
 

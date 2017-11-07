@@ -6,5 +6,10 @@ class Entity : public Node
 public:
 	virtual void bindEntity();
 
+	bool init();
+
+	CC_SYNTHESIZE(int, goodsId, getgoodsId);
+
+
 
 };

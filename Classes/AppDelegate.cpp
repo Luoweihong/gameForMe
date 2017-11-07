@@ -59,7 +59,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("Gameforlwh", cocos2d::Rect(0, 0, 1980, 1080));
+        glview = GLViewImpl::createWithRect("Gameforlwh", cocos2d::Rect(0, 0, 960, 640));
 #else
         glview = GLViewImpl::create("Gameforlwh");
 #endif
@@ -106,6 +106,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	FileUtils::getInstance()->addSearchPath("fonts");
 	FileUtils::getInstance()->addSearchPath("map2");
 	FileUtils::getInstance()->addSearchPath("NPC");
+	FileUtils::getInstance()->addSearchPath("csb");
 	SceneMgr* sceneMgr = SceneMgr::getSceneMgr();
 
 	Scene* scene = sceneMgr->createScene();

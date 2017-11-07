@@ -10,10 +10,14 @@ bool NPC::init(String name)
 
 void NPC::bindEntity()
 {
-	SpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("sunshangxiang");
+	SpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(getNpcName().getCString());
+	
+	char  displayFrame[100];
 
-	initWithFile("sunshangxiang (1).png");
-	runAction(Common::createAnimate("sunshangxiang", "sunshangxiang",8));
+	sprintf(displayFrame, "%s %s", getNpcName().getCString(), "(1).png");
+
+	initWithFile(displayFrame);
+	runAction(Common::createAnimate(getNpcName().getCString(), getNpcName().getCString(),8));
 	
 
 	setAnchorPoint(Vec2(0, 0));

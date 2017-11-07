@@ -239,6 +239,9 @@ void Monster::getDownHP(int num)
 	{
 		addChild(flyword, 127);
 		state = MonsterBase::DEAD;
+
+		//µôÂäÎïÆ·Âß¼­
+
 		return;
 	}
 	addChild(flyword, 127);
